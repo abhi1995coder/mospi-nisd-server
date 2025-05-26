@@ -1,0 +1,11 @@
+{
+  "name": "mospi-nisd-server",
+  "version": "1.0.0",
+  "description": "This is a server for MOSPI NISD",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "MOSPI",
+  "license": "ISC"
+}

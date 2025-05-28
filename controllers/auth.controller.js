@@ -40,7 +40,7 @@ exports.verifyOtp=async(req,res)=>{
        if(user.otpCode!=otp || new Date()>user.otpExpiresAt) return res.status(400).json({message:'invalid or expired otp'})
        
        await user.update({isVerified:true,otpCode:null,otpExpiresAt:null})
-       const token=jwt.sign({id:user.id,role:user.role,email:user.email},process.env.JWT_SECRET,{expiresIn:'7d'})
+       const token=jwt.sign({id:user.id,role:user.role,email:user.email},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRES_IN})
        res.status(200).json({message:'OTP verified',token})
    }catch(err){
     console.log(err)

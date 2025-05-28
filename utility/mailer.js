@@ -18,7 +18,7 @@ exports.sendOtp=async(to,otp)=>{
     await transporter.sendMail(mailOptions)
     console.log(`OTP send to: ${to}`)
    }catch(err){
-    console.error('Error sendin mail',error)
+    console.error('Error sending mail',err)
     throw err
    }
 }

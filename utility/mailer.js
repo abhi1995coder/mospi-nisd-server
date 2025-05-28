@@ -7,7 +7,7 @@ const transporter=nodemailer.createTransport({
     },
 
 })
-exports.sendOTP=async(to,otp)=>{
+exports.sendOtp=async(to,otp)=>{
    const mailOptions={
     from:`"MOSPI Internship"=<${process.env.EMAIL_USER}>`,
     to,
@@ -19,6 +19,6 @@ exports.sendOTP=async(to,otp)=>{
     console.log(`OTP send to: ${to}`)
    }catch(err){
     console.error('Error sendin mail',error)
-    throw error
+    throw err
    }
 }

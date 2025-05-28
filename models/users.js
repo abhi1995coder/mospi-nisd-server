@@ -15,42 +15,42 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   users.init({
-    id:{
+    user_id:{
       allowedNull:false,
-      autoIncrement:true,
       primaryKey:true,
-      type:Sequelize.INTEGER,
+      type:DataTypes.UUID,
+      defaultValue:DataTypes.UUIDV4,
     },
     email:{
-      type:Sequelize.STRING,
+      type:DataTypes.STRING,
       unique:true,
       allowNull:false,
     },
-    paaswordHash:{
-      type:Sequelize.STRING,
+    passwordHash:{
+      type:DataTypes.STRING,
     },
     role:{
       allowNull:false,
-      type:Sequelize.STRING,
+      type:DataTypes.STRING,
       defaultValue:'intern',
     },
     otpCode:{
-      type:Sequelize.STRING
+      type:DataTypes.STRING
     },
     otpExpiresAt:{
-      type:Sequelize.DATE
+      type:DataTypes.DATE
     },
     isVerified:{
-      type:Sequelize.BOOLEAN,
+      type:DataTypes.BOOLEAN,
       defaultValue:false,
     },
     createdAt:{
-      type:Sequelize.DATE,
+      type:DataTypes.DATE,
       allowNull:false,
       defaultValue:Sequelize.fn('NOW'),
     },
     updatedAt:{
-      type:Sequelize.DATE,
+      type:DataTypes.DATE,
       allowNull:false,
       defaultValue:Sequelize.fn('NOW'),
     },

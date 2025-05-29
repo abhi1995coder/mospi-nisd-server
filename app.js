@@ -29,7 +29,7 @@ const PORT=process.env.PORT
 sequelize.authenticate().then(()=>{
     console.log('Connected to the database for MOSPI NISD')
     app.listen(PORT,()=>{
-    console.log('MOSPI NISD Server started at port:'+PORT)
+    console.log('MOSPI NISD Server started at port:',PORT)
 })
 }).catch((err)=>{
     console.log('Failed to connect database for MOSPI NISD')

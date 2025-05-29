@@ -53,6 +53,7 @@ exports.login=async(req,res)=>{
     const user=await users.findOne({where:{email}})
     if(!user) return res.status(404).json({message:'Invalid credentialts'})
     if(!user.isVerified) return res.status(403).json({message:'Account not verified'})
+    if(!user.isActive) return res.status(403).json({message:'Account disabled'})  
     
     const match=await bcrypt.compare(password,user.passwordHash)
     if(!match) return res.status(400).json({message:'Invalid credentials'}) 

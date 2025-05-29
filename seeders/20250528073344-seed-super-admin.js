@@ -14,10 +14,12 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-   const hash=await bcrypt.hash('superadmin@1234',10)
+   const email=process.env.SUPER_ADMIN_EMAIL
+   const password=process.env.SUPER_ADMIN_PASSWORD
+   const hash=await bcrypt.hash(password,10)
    return queryInterface.bulkInsert('users',[{
     user_id:uuidv4(),
-    email:"superadmin@gmail.com",
+    email,
     passwordHash:hash,
     role:'superadmin',
     isVerified:true,

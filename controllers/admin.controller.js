@@ -64,3 +64,17 @@ exports.disableAdmin=async(req,res)=>{
     res.status(500).json({message:'Failed to disable Admin'})
   }
 }
+exports.getAllAdmins=async(req,res)=>{
+  try{
+    const admins=await users.findAll({
+      where:{
+        role:['group_a_admin','group_b_admin']
+      },
+      attributes:['user_id','email','role','isActive','createdAt']
+    })
+    res.status(200).json({admins})
+  }catch(err){
+    console.log(err)
+    res.status(500).json({message:'Failed to fetch admins'})
+  }
+}

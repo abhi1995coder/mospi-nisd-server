@@ -2,7 +2,7 @@ const{users}=require('../models')
 const bcrypt=require('bcryptjs')
 const{v4:uuidv4}=require('uuid')
 exports.createAdmin=async(req,res)=>{
-    const{email,password,role}=req.body
+    const{name,email,password,role}=req.body
     if(!['group_a_admin','group_b_admin'].includes(role)){
         return res.status(400).json({message:"Invalid admin role"})
     }
@@ -14,6 +14,7 @@ exports.createAdmin=async(req,res)=>{
 
       const newAdmin=await users.create({
         user_id:uuidv4(),
+        user_name:name,
         email,
         passwordHash:hashedPassword,
         role,
@@ -28,7 +29,7 @@ exports.createAdmin=async(req,res)=>{
 }
 exports.editAdmin=async(req,res)=>{
   const{user_id}=req.params
-  const{email,role,password}=req.body
+  const{name,email,role,password}=req.body
   if(role && !['group_a_admin','group_b_admin'].includes(role)){
     return res.status(400).json({message:'invalid role'})
   }
@@ -37,7 +38,7 @@ exports.editAdmin=async(req,res)=>{
     if(!user || !['group_a_admin','group_b_admin'].includes(user.role)){
       return res,status(404).json({message:'Admin not found'})
     }
-    const updateData={email,role}
+    const updateData={name,email,role}
     if(password){
       updateData.passwordHash=await bcrypt.hash(password,10)
     }
@@ -70,7 +71,7 @@ exports.getAllAdmins=async(req,res)=>{
       where:{
         role:['group_a_admin','group_b_admin']
       },
-      attributes:['user_id','email','role','isActive','createdAt']
+      attributes:['user_id','user_name','email','role','isActive','createdAt']
     })
     res.status(200).json({admins})
   }catch(err){

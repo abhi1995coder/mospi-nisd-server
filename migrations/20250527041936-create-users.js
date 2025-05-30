@@ -9,6 +9,10 @@ module.exports = {
             type:Sequelize.UUID,
             defaultValue:Sequelize.literal('gen_random_uuid()'),
           },
+          user_name:{
+            type:Sequelize.STRING,
+            allowNull:true
+          },
           email:{
             type:Sequelize.STRING,
             unique:true,

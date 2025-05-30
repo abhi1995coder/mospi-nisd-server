@@ -14,11 +14,13 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+   const name=process.env.SUPER_ADMIN_NAME
    const email=process.env.SUPER_ADMIN_EMAIL
    const password=process.env.SUPER_ADMIN_PASSWORD
    const hash=await bcrypt.hash(password,10)
    return queryInterface.bulkInsert('users',[{
     user_id:uuidv4(),
+    user_name:name,
     email,
     passwordHash:hash,
     role:'superadmin',

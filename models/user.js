@@ -64,11 +64,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     sequelize,
-<<<<<<< HEAD
     modelName:'User',
-=======
-    modelName: 'User',
->>>>>>> 6b210796dff3ac85b97fa4d9237b4d834dd83625
     tableName:'users'
   });
   return User;

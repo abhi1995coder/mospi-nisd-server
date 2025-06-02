@@ -9,7 +9,7 @@ exports.createAdmin=async(req,res)=>{
     try{
       const existingUser=await User.findOne({where:{email}})
       if(existingUser) return res.status(400).json({message:'User already exists'})
-      
+
       const hashedPassword=await bcrypt.hash(password,10)
 
       const newAdmin=await User.create({

@@ -21,7 +21,7 @@ module.exports = {
        },
        content:{
         type:Sequelize.TEXT
-       }, 
+       },
        published_by:{
         type:Sequelize.UUID,
         allowNull:false,
@@ -34,7 +34,7 @@ module.exports = {
        published_date:{
         type:Sequelize.DATE,
         allowNull:false,
-        defaultValue:Sequelize.fn('NOw')
+        defaultValue:Sequelize.fn('NOW')
        },
        expiry_date:{
         type:Sequelize.DATE

@@ -26,7 +26,7 @@ module.exports = {
           onDelete:'CASCADE'
          },
          group_type:{
-            type:Sequelize.STRING,
+            type: Sequelize.ENUM('A', 'B'),
             allowNull:false
          },
          preferred_offices:{
@@ -36,7 +36,7 @@ module.exports = {
             type:Sequelize.JSONB
          },
          application_status:{
-           type:Sequelize.STRING,
+           type: Sequelize.ENUM('draft', 'submitted', 'under_review', 'accepted', 'rejected'),
            defaultValue:'draft'
          },
          submission_date:{

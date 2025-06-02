@@ -21,8 +21,8 @@ module.exports = {
         type:Sequelize.UUID,
         allowNull:false,
         references:{
-          model:'users',
-          key:'user_id'
+          model:'interns',
+          key:'intern_id'
         },
         onDelete:'CASCADE'
 
@@ -35,7 +35,7 @@ module.exports = {
       programme_name:{
         type:Sequelize.STRING,
         allowNull:false
-      
+
       },
       discipline:{
         type:Sequelize.STRING,
@@ -93,5 +93,5 @@ module.exports = {
      */
     await queryInterface.dropTable('qualifications')
   }
-  
+
 };

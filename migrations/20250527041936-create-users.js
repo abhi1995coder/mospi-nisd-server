@@ -23,7 +23,7 @@ module.exports = {
           },
           role:{
             allowNull:false,
-            type:Sequelize.STRING,
+            type:Sequelize.ENUM('intern','group_a_admin','group_b_admin','super_admin'),
             defaultValue:'intern',
           },
           otpCode:{

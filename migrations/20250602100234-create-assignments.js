@@ -37,14 +37,14 @@ module.exports = {
          },
          start_date:{
           type:Sequelize.DATE,
-          
+
          },
          end_date:{
           type:Sequelize.DATE,
-          
+
          },
          status:{
-          type:Sequelize.STRING,
+          type: Sequelize.ENUM('offered', 'accepted', 'joined', 'completed', 'terminated'),
           defaultValue:'offered'
          },
          joining_report_url:{
@@ -84,7 +84,7 @@ module.exports = {
          updatedAt:{
            type:Sequelize.DATE,
            allowNull:false,
-           defaultValue:Sequelize.fn('NoW')
+           defaultValue:Sequelize.fn('NOW')
          }
     })
   },

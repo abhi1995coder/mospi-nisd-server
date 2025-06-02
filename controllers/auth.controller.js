@@ -1,6 +1,6 @@
 const bcrypt=require('bcryptjs')
 const jwt=require('jsonwebtoken')
-const{users}=require('../models')
+const{User}=require('../models')
 const{sendOtp}=require('../utility/mailer')
 
 const generateOTP=()=>Math.floor(100000+Math.random()*900000).toString()
@@ -12,7 +12,7 @@ exports.register=async(req,res)=>{
    
    const expiresAt=new Date(Date.now()+10*60*1000)
    try{
-      const existing=await users.findOne({where:{email}})
+      const existing=await User.findOne({where:{email}})
       if(existing) return res.status(400).json({message:'Email already exists'})
       await users.create({
         email,
@@ -32,7 +32,7 @@ exports.register=async(req,res)=>{
 exports.verifyOtp=async(req,res)=>{
    const{email,otp}=req.body
    try{
-       const user=await users.findOne({where:{email}})
+       const user=await User.findOne({where:{email}})
 
        if(!user) return res.status(404).json({message:'User not found'})
       
@@ -50,7 +50,7 @@ exports.verifyOtp=async(req,res)=>{
 exports.login=async(req,res)=>{
    const{email,password}=req.body
    try{
-    const user=await users.findOne({where:{email}})
+    const user=await User.findOne({where:{email}})
     if(!user) return res.status(404).json({message:'Invalid credentialts'})
     if(!user.isVerified) return res.status(403).json({message:'Account not verified'})
     if(!user.isActive) return res.status(403).json({message:'Account disabled'})  
@@ -70,7 +70,7 @@ exports.requestPasswordReset=async(req,res)=>{
    const otp=generateOTP()
    const expiresAt=new Date(Date.now()+10*60*1000)
    try{
-    const user=await users.findOne({where:{email}})
+    const user=await User.findOne({where:{email}})
     if(!user) return res.status(404).json({message:'Invalid credentials'})
     
     await user.update({otpCode:otp,otpExpiresAt:expiresAt})    
@@ -85,7 +85,7 @@ exports.requestPasswordReset=async(req,res)=>{
 exports.resetPassword=async(req,res)=>{
    const{email,otp,new_password}=req.body
    try{
-    const user=await users.findOne({where:{email}})
+    const user=await User.findOne({where:{email}})
     if(!user || user.otpCode!=otp || new Date()>user.otpExpiresAt) return res.status(400).json({message:'Invalid otp or expired '})
     
     const hashed=await bcrypt.hash(new_password,10)

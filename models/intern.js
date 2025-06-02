@@ -4,7 +4,7 @@ const {
   Sequelize
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class interns extends Model {
+  class Intern extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  interns.init({
+  Intern.init({
     intern_id:{
           type:DataTypes.UUID,
           allowNull:false,
@@ -77,14 +77,15 @@ module.exports = (sequelize, DataTypes) => {
        }
   }, {
     sequelize,
-    modelName: 'interns',
+    modelName: 'Interns',
+    tableName:'interns'
   });
-  interns.associate=(models)=>{
-    interns.belongsTo(models.users,{
+  Intern.associate=(models)=>{
+    Intern.belongsTo(models.User,{
       foreignKey:'user_id',
       as:'user',
       onDelete:'CASCADE'
     })
   }
-  return interns;
+  return Intern;
 };

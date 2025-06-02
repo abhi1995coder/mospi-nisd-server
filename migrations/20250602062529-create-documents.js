@@ -9,52 +9,45 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.createTable('applications',{
-      application_id:{
-        allowNull:false,
-        primaryKey:true,
-        type:Sequelize.UUID,
-        defaultValue:Sequelize.literal('gen_random_uuid()')
+    await queryInterface.createTable('documents',{
+      document_id:{
+         type:Sequelize.UUID,
+         primaryKey:true,
+         allowNull:false,
+         defaultValue:Sequelize.literal('gen_random_uuid()')
       },
-      user_id:{
-        allowNull:false,
+      intern_id:{
         type:Sequelize.UUID,
+        allowNull:false,
         references:{
-          model:'users',
-          key:'user_id'
+          model:'interns',
+          key:'intern_id'
         },
         onDelete:'CASCADE'
       },
-      department:{
+      document_type:{
         type:Sequelize.STRING,
         allowNull:false
       },
-      duration_weeks:{
-        type:Sequelize.INTEGER,
-        allowNull:false
+      document_url:{
+         type:Sequelize.STRING,
+         allowNull:false
       },
-      preferred_topics:{
+      verification_status:{
         type:Sequelize.STRING,
-        allowNull:true
-      },
-      status:{
-        type:Sequelize.STRING,
-        defaultValue:'pending',
-        allowNull:false
-      },
-      review_comment:{
-        type:Sequelize.TEXT,
-        allowNull:true
-      },
-      submittedAt:{
-        type:Sequelize.DATE,
         allowNull:false,
-        defaultValue:Sequelize.fn('NOW')
+        defaultValue:'pending'
+      },
+      createdAt:{
+         type:Sequelize.DATE,
+         allowNull:false,
+         defaultValue:Sequelize.fn('NOW')
       },
       updatedAt:{
         type:Sequelize.DATE,
         allowNull:false,
         defaultValue:Sequelize.fn('NOW')
+
       }
 
     })
@@ -67,6 +60,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropTable('applications');
+    await queryInterface.dropTable('documents')
   }
 };

@@ -16,9 +16,11 @@ app.use(helmet())
 
 const authRoutes=require('./routes/auth.route')
 const adminRoutes=require('./routes/admin.route')
+const internRoutes=require('./routes/intern.route')
 
 app.use('/api/auth',authRoutes)
 app.use('/api/admin',adminRoutes)
+app.use('/api/intern',internRoutes)
 
 app.get('/api/health',(req,res)=>{
     res.json({staus:'UP',timestamp:new Date()})

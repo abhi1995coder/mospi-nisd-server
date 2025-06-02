@@ -1,4 +1,4 @@
-const{users}=require('../models')
+const{User}=require('../models')
 const bcrypt=require('bcryptjs')
 const{v4:uuidv4}=require('uuid')
 exports.createAdmin=async(req,res)=>{
@@ -7,12 +7,12 @@ exports.createAdmin=async(req,res)=>{
         return res.status(400).json({message:"Invalid admin role"})
     }
     try{
-      const existingUser=await users.findOne({where:{email}})
+      const existingUser=await User.findOne({where:{email}})
       if(existingUser) return res.status(400).json({message:'User already exists'})
       
       const hashedPassword=await bcrypt.hash(password,10)
 
-      const newAdmin=await users.create({
+      const newAdmin=await User.create({
         user_id:uuidv4(),
         user_name:name,
         email,
@@ -34,7 +34,7 @@ exports.editAdmin=async(req,res)=>{
     return res.status(400).json({message:'invalid role'})
   }
   try{
-    const user=await users.findOne({where:{user_id}})
+    const user=await User.findOne({where:{user_id}})
     if(!user || !['group_a_admin','group_b_admin'].includes(user.role)){
       return res,status(404).json({message:'Admin not found'})
     }
@@ -53,7 +53,7 @@ exports.editAdmin=async(req,res)=>{
 exports.disableAdmin=async(req,res)=>{
   const{user_id}=req.params
   try{
-    const user=await users.findOne({where:{user_id}})
+    const user=await User.findOne({where:{user_id}})
     if(!user || ['group_a_admin','group_b_admin'].includes(user.role)){
       return res.status(404).json({message:'Admin not found'})
     }
@@ -67,7 +67,7 @@ exports.disableAdmin=async(req,res)=>{
 }
 exports.getAllAdmins=async(req,res)=>{
   try{
-    const admins=await users.findAll({
+    const admins=await User.findAll({
       where:{
         role:['group_a_admin','group_b_admin']
       },

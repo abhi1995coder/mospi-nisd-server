@@ -23,7 +23,7 @@ module.exports = {
     user_name:name,
     email,
     passwordHash:hash,
-    role:'superadmin',
+    role:'super_admin',
     isVerified:true,
     createdAt:new Date(),
     updatedAt:new Date(),

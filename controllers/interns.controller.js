@@ -1,0 +1,15 @@
+exports.createIntern=async(req,res)=>{
+    //
+}
+exports.getInternByUserId=async(req,res)=>{
+    //
+}
+exports.updateIntern=async(req,res)=>{
+    //
+}
+exports.getQualifications=async(req,res)=>{
+    //
+}
+exports.updateQualifications=async(req,res)=>{
+    //
+}

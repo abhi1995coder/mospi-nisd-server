@@ -15,12 +15,25 @@ app.use(cors({
 app.use(helmet())
 
 const authRoutes=require('./routes/auth.route')
-const adminRoutes=require('./routes/admin.route')
-const internRoutes=require('./routes/intern.route')
+/*const adminRoutes=require('./routes/admins.route')
+const internRoutes=require('./routes/interns.route')
+const documentRoutes=require('./routes/documents.route')
+const applicationRoutes=require('./routes/applications.route')
+const officeRoutes=require('./routes/offices.route')
+const assignmentRoutes=require('./routes/assignments.route')
+const attendenceRoutes=require('./routes/attendences.route')
+const noticeRoutes=require('./routes/notices.route')*/
+
 
 app.use('/api/auth',authRoutes)
-app.use('/api/admin',adminRoutes)
+/*app.use('/api/admin',adminRoutes)
 app.use('/api/intern',internRoutes)
+app.use('/api/document',documentRoutes)
+app.use('/api/application',applicationRoutes)
+app.use('/api/office',officeRoutes)
+app.use('/api/assignment',assignmentRoutes)
+app.use('/api/attendence',attendenceRoutes)
+app.use('/api/notice',noticeRoutes)*/
 
 app.get('/api/health',(req,res)=>{
     res.json({staus:'UP',timestamp:new Date()})

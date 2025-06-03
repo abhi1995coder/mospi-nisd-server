@@ -2,7 +2,7 @@ const{body}=require('express-validator')
 
 exports.validateRegister=[
     body('email').isEmail().withMessage('Valid email is recquired'),
-    body('password').isLength({min:6}).withMessage('Password must be greater than 6 digits')
+    body('password').isLength({min:6}).withMessage('Password must be atleast 6 digits')
 ]
 exports.validateOTP=[
      body('email').isEmail().withMessage('Valid email is recquired'),

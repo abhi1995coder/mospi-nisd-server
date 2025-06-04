@@ -77,7 +77,7 @@ module.exports = (sequelize, DataTypes) => {
        }
   }, {
     sequelize,
-    modelName: 'Interns',
+    modelName: 'Intern',
     tableName:'interns'
   });
   Intern.associate=(models)=>{

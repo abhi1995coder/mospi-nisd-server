@@ -58,13 +58,8 @@ module.exports = {
        university:{
           type:Sequelize.STRING
        },
-       profile_photo_url:{
-         type:Sequelize.STRING
-       },
-       aadhar_card_url:{
-         type:Sequelize.STRING
-       },
-       createdAt:{
+       
+        createdAt:{
            type:Sequelize.DATE,
            allowNull:false,
            defaultValue:Sequelize.fn('NOW')

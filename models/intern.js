@@ -59,12 +59,7 @@ module.exports = (sequelize, DataTypes) => {
        university:{
           type:DataTypes.STRING
        },
-       profile_photo_url:{
-         type:DataTypes.STRING
-       },
-       aadhar_card_url:{
-         type:DataTypes.STRING
-       },
+       
        createdAt:{
            type:DataTypes.DATE,
            allowNull:false,

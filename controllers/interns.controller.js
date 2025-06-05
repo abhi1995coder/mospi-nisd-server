@@ -66,6 +66,7 @@ exports.getQualifications=async(req,res)=>{
 exports.upsrtQualifications=async(req,res)=>{
     try{
       const {userId}=req.params;
+     
       
       const intern=await Intern.findOne({where:{user_id:userId}})
       if(!intern){

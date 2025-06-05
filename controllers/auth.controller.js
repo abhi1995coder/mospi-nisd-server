@@ -47,7 +47,7 @@ exports.verifyOtp=async(req,res)=>{
     res.status(500).json({message:'Server error'})
    }
 }
-exports.login=async(req,res)=>{
+/*exports.login=async(req,res)=>{
    const{email,password}=req.body
    try{
     const user=await User.findOne({where:{email}})
@@ -64,7 +64,86 @@ exports.login=async(req,res)=>{
     console.log(err)
     res.status(500).json({message:'Server error'})
    }
-}
+}*/
+
+exports.requestOtpLogin = async (req, res) => {
+  const { email, password } = req.body;
+  const otp = generateOTP();
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+  try {
+    const user = await User.findOne({ where: { email } });
+
+    if (!user)
+      return res.status(404).json({ message: 'User not found' });
+
+    if (!user.isVerified)
+      return res.status(403).json({ message: 'Account not verified' });
+
+    if (!user.isActive)
+      return res.status(403).json({ message: 'Account disabled' });
+
+    const match = await bcrypt.compare(password, user.passwordHash);
+    if (!match)
+      return res.status(400).json({ message: 'Invalid password' });
+
+    await user.update({
+      otpCode: otp,
+      otpExpiresAt: expiresAt,
+    });
+
+    await sendOtp(email, otp);
+
+    return res.status(200).json({
+      message: 'OTP sent to your registered email address',
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// ✅ STEP 2: Intern enters email + OTP → JWT issued
+exports.login = async (req, res) => {
+  const { email, otp } = req.body;
+
+  try {
+    const user = await User.findOne({ where: { email } });
+
+    if (!user)
+      return res.status(404).json({ message: 'User not found' });
+
+    if (
+      user.otpCode !== otp ||
+      new Date() > user.otpExpiresAt
+    ) {
+      return res.status(400).json({
+        message: 'Invalid or expired OTP',
+      });
+    }
+
+    // Clear OTP fields after successful login
+    await user.update({ otpCode: null, otpExpiresAt: null });
+
+    const token = jwt.sign(
+      {
+        user_id: user.user_id,
+        role: user.role,
+        email: user.email,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    return res.status(200).json({
+      message: 'Login successful',
+      token,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
 exports.requestPasswordReset=async(req,res)=>{
    const{email}=req.body
    const otp=generateOTP()

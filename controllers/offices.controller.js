@@ -1,6 +1,6 @@
 const { Office } = require('../models');
 
-// ✅ Create a new office (admin only)
+// Create a new office (admin only)
 exports.createOffice = async (req, res) => {
   try {
     const office = await Office.create(req.body);
@@ -11,7 +11,7 @@ exports.createOffice = async (req, res) => {
   }
 };
 
-// ✅ Get all offices (accessible to all logged-in users)
+//  Get all offices (accessible to all logged-in users)
 exports.getAllOffices = async (req, res) => {
   try {
     const offices = await Office.findAll();
@@ -22,7 +22,7 @@ exports.getAllOffices = async (req, res) => {
   }
 };
 
-// ✅ Get single office by ID
+// Get single office by ID
 exports.getOfficeById = async (req, res) => {
   try {
     const office = await Office.findByPk(req.params.id);
@@ -34,7 +34,7 @@ exports.getOfficeById = async (req, res) => {
   }
 };
 
-// ✅ Update office (admin only)
+//  Update office (admin only)
 exports.updateOffice = async (req, res) => {
   try {
     const office = await Office.findByPk(req.params.id);
@@ -48,7 +48,7 @@ exports.updateOffice = async (req, res) => {
   }
 };
 
-// ✅ Delete office (admin only)
+//  Delete office (admin only)
 exports.deleteOffice = async (req, res) => {
   try {
     const office = await Office.findByPk(req.params.id);

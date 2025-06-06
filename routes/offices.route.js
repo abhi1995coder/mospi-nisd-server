@@ -12,26 +12,11 @@ const {
 const { authMiddleware, roleCheck } = require('../middlewares/auth.middleware');
 
 // Admin only
-router.post(
-  '/',
-  authMiddleware,
-  roleCheck('admin'),
-  createOffice
-);
+router.post('/',authMiddleware,roleCheck('super_admin','group_a_admin','group_b_admin'),createOffice);
 
-router.put(
-  '/:id',
-  authMiddleware,
-  roleCheck('admin'),
-  updateOffice
-);
+router.put('/:id',authMiddleware,roleCheck('super_admin','group_a_admin','group_b_admin'),updateOffice);
 
-router.delete(
-  '/:id',
-  authMiddleware,
-  roleCheck('admin'),
-  deleteOffice
-);
+router.delete('/:id',authMiddleware,roleCheck('super_admin','group_a_admin','group_b_admin'),deleteOffice);
 
 // Accessible to both admin and interns
 router.get('/', authMiddleware, getAllOffices);

@@ -9,20 +9,9 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 
-router.post(
-  '/',
-  authMiddleware,
-  roleCheck('intern'),
-  upload.single('file'), 
-  uploadDocument
-);
+router.post('/',authMiddleware,roleCheck('intern'),upload.single('file'), uploadDocument);
 
 
-router.get(
-  '/',
-  authMiddleware,
-  roleCheck('intern'),
-  getDocumentsByIntern
-);
+router.get('/',authMiddleware,roleCheck('intern'),getDocumentsByIntern);
 
 module.exports = router;

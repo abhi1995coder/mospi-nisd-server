@@ -103,7 +103,7 @@ exports.requestOtpLogin = async (req, res) => {
   }
 };
 
-// ✅ STEP 2: Intern enters email + OTP → JWT issued
+
 exports.login = async (req, res) => {
   const { email, otp } = req.body;
 
@@ -122,7 +122,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Clear OTP fields after successful login
+    
     await user.update({ otpCode: null, otpExpiresAt: null });
 
     const token = jwt.sign(
@@ -131,8 +131,7 @@ exports.login = async (req, res) => {
         role: user.role,
         email: user.email,
       },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
+      process.env.JWT_SECRET,{ expiresIn: '1d' }
     );
 
     return res.status(200).json({

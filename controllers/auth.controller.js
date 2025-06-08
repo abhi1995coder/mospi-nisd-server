@@ -47,24 +47,6 @@ exports.verifyOtp=async(req,res)=>{
     res.status(500).json({message:'Server error'})
    }
 }
-/*exports.login=async(req,res)=>{
-   const{email,password}=req.body
-   try{
-    const user=await User.findOne({where:{email}})
-    if(!user) return res.status(404).json({message:'Invalid credentialts'})
-    if(!user.isVerified) return res.status(403).json({message:'Account not verified'})
-    if(!user.isActive) return res.status(403).json({message:'Account disabled'})
-
-    const match=await bcrypt.compare(password,user.passwordHash)
-    if(!match) return res.status(400).json({message:'Invalid credentials'})
-    const token=jwt.sign({user_id:user.user_id,role:user.role,email:user.email},process.env.JWT_SECRET,{expiresIn:'7d'})
-    res.status(200).json({message:'Login successfull',token})
-
-   }catch(err){
-    console.log(err)
-    res.status(500).json({message:'Server error'})
-   }
-}*/
 
 exports.requestOtpLogin = async (req, res) => {
   const { email, password } = req.body;
@@ -122,7 +104,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    
+
     await user.update({ otpCode: null, otpExpiresAt: null });
 
     const token = jwt.sign(

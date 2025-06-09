@@ -50,10 +50,7 @@ module.exports = (sequelize, DataTypes) => {
           type:DataTypes.STRING,
           allowNull:false
         },
-        available_slots:{
-          type:DataTypes.INTEGER,
-          defaultValue:0
-        },
+        
         isActive:{
           type:DataTypes.BOOLEAN,
           defaultValue:true

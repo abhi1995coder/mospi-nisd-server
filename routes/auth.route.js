@@ -8,7 +8,7 @@ const{validateRegister,
 }=require('../middlewares/auth.validator')
 const authController=require('../controllers/auth.controller')
 
-//Routes
+
 router.post('/register',validateRegister,handleValidation,authController.register)
 router.post('/verify-otp',validateOTP,handleValidation,authController.verifyOtp)
 router.post('/request-login-otp',validateLogin,handleValidation,authController.requestOtpLogin)

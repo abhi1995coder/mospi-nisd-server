@@ -45,10 +45,7 @@ module.exports = {
           type:Sequelize.STRING,
           allowNull:false
         },
-        available_slots:{
-          type:Sequelize.INTEGER,
-          defaultValue:0
-        },
+        
         isActive:{
           type:Sequelize.BOOLEAN,
           defaultValue:true

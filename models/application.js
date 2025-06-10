@@ -1,7 +1,7 @@
 'use strict';
 const {
   Model,
-  Sequelize
+
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Application extends Model {
@@ -12,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+       Application.belongsTo(models.Intern,{
+      foreignKey:'intern_id',
+      as:'intern',
+      onDelete:'CASCADE'
+       })
     }
   }
   Application.init({
@@ -51,24 +56,19 @@ module.exports = (sequelize, DataTypes) => {
          },
          createdAt:{
             type:DataTypes.DATE,
-            defaultValue:Sequelize.fn('NOW'),
+            defaultValue:DataTypes.NOW,
             allowNull:false
          },
          updatedAt:{
           type:DataTypes.DATE,
           allowNull:false,
-          defaultValue:Sequelize.fn('NOW')
+          defaultValue:DataTypes.NOW
          }
   }, {
     sequelize,
     modelName: 'Application',
     tableName:'applications'
   });
-  Application.associate=(models)=>{
-    Application.belongsTo(models.Intern,{
-      foreignKey:'intern_id',
-      as:'intern',
-      onDelete:'CASCADE'
-    })}
+  
   return Application;
 };

@@ -30,15 +30,34 @@ exports.createInternship=async(req,res)=>{
         return res.status(500).json({message:'Internal server error'})
     }
 }
-exports.getAllInternship=async(req,res)=>{
-    try{
-       const internships= await Internship.findAll()
-       return res.staus(200).json({internships})
-    }catch(err){
-        console.log(err)
-        return res.status(500).json({message:'Internal server error'})
+exports.getAllInternship = async (req, res) => {
+  try {
+    const { group_type } = req.query;
+
+    const whereClause = {};
+    if (group_type) {
+      if (!['A', 'B'].includes(group_type)) {
+        return res.status(400).json({ message: 'Invalid group_type. Use A or B.' });
+      }
+      whereClause.group_type = group_type;
     }
-}
+
+    const internships = await Internship.findAll({
+      where: whereClause,
+      include: {
+        model: Office,
+        attributes: ['office_id', 'name', 'state', 'city']
+      },
+      order: [['start_date', 'ASC']]
+    });
+
+    res.status(200).json({ internships });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 exports.getInternshipById=async(req,res)=>{
     try{
         const internship=await Internship.findByPk(req.params.id)

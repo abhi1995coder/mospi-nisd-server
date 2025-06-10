@@ -1,7 +1,7 @@
 'use strict';
 const {
   Model,
-  Sequelize
+  
 } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Qualification.belongsTo(models.Intern,{
+      foreignKey:'intern_id',
+      as:'intern',
+      onDelete:'CASCADE'
+    })
     }
   }
   Qualification.init({
@@ -24,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
 
       },
       intern_id:{
-        type:Sequelize.UUID,
+        type:DataTypes.UUID,
         allowNull:false,
       },
       highest_academic_level:{
@@ -52,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
          type:DataTypes.DECIMAL(5,2)
       },
       post_graduation_percentage:{
-          type:Sequelize.DECIMAL(5,2)
+          type:DataTypes.DECIMAL(5,2)
       },
       twelth_percentage:{
          type:DataTypes.DECIMAL(5,2)
@@ -67,17 +72,17 @@ module.exports = (sequelize, DataTypes) => {
          type:DataTypes.STRING
       },
       completion_date:{
-        type:DataTypes.DATE
+        type:DataTypes.DATEONLY
       },
       createdAt:{
         type:DataTypes.DATE,
         allowNull:false,
-        defaultValue:Sequelize.fn('NOW')
+        defaultValue:DataTypes.NOW
       },
       updatedAt:{
         type:DataTypes.DATE,
         allowNull:false,
-        defaultValue:Sequelize.fn('NOW')
+        defaultValue:DataTypes.NOW
       }
 
   }, {
@@ -85,12 +90,6 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Qualification',
     tableName:'qualifications',
   });
-  Qualification.associate=(models)=>{
-    Qualification.belongsTo(models.Intern,{
-      foreignKey:'intern_id',
-      as:'intern',
-      onDelete:'CASCADE'
-    })
-  }
+  
   return Qualification;
 };

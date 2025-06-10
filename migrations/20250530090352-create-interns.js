@@ -41,7 +41,7 @@ module.exports = {
            
        },
        date_of_birth:{
-           type:Sequelize.DATE
+           type:Sequelize.DATEONLY
        },
        contact_number:{
           type:Sequelize.STRING

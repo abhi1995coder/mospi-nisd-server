@@ -67,7 +67,7 @@ module.exports = {
          type:Sequelize.STRING
       },
       completion_date:{
-        type:Sequelize.DATE
+        type:Sequelize.DATEONLY
       },
       createdAt:{
         type:Sequelize.DATE,

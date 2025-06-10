@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+       Internship.belongsTo(models.Office,{
+      foreignKey:'office_id',
+      as:'office',
+      onDelete:'CASCADE'
+    })
     }
   }
   Internship.init({
@@ -32,6 +37,10 @@ module.exports = (sequelize, DataTypes) => {
     title: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    group_type:{
+     type:DataTypes.ENUM('A','B'),
+     allowNull:false
     },
     duration_months: {
       type: DataTypes.INTEGER,
@@ -71,12 +80,6 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Internship',
     tableName: 'internships',
   });
-    Internship.associate=(models)=>{
-    Internship.belongsTo(models.Office,{
-      foreignKey:'office_id',
-      as:'office',
-      onDelete:'CASCADE'
-    })
-  }
+    
   return Internship;
 };

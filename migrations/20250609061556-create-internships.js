@@ -29,6 +29,10 @@ module.exports = {
         type:Sequelize.STRING,
         allowNull:false
       },
+      group_type:{
+        type:Sequelize.ENUM('A','B'),
+        allowNull:false
+      },
       duration_months:{
         type:Sequelize.INTEGER,
         allowNull:false

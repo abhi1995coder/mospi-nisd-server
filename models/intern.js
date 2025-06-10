@@ -1,7 +1,7 @@
 'use strict';
 const {
   Model,
-  Sequelize
+  
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Intern extends Model {
@@ -12,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Intern.belongsTo(models.User,{
+      foreignKey:'user_id',
+      as:'user',
+      onDelete:'CASCADE'
+    })
     }
   }
   Intern.init({
@@ -22,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
           primaryKey:true
        },
        user_id:{
-          type:Sequelize.UUID,
+          type:DataTypes.UUID,
           allowNull:false,
           
        },
@@ -42,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
            
        },
        date_of_birth:{
-           type:DataTypes.DATE
+           type:DataTypes.DATEONLY
        },
        contact_number:{
           type:DataTypes.STRING
@@ -63,24 +68,18 @@ module.exports = (sequelize, DataTypes) => {
        createdAt:{
            type:DataTypes.DATE,
            allowNull:false,
-           defaultValue:Sequelize.fn('NOW')
+           defaultValue:DataTypes.NOW
        },
        updatedAt:{
            type:DataTypes.DATE,
            allowNull:false,
-           defaultValue:Sequelize.fn('NOW')
+           defaultValue:DataTypes.NOW
        }
   }, {
     sequelize,
     modelName: 'Intern',
     tableName:'interns'
   });
-  Intern.associate=(models)=>{
-    Intern.belongsTo(models.User,{
-      foreignKey:'user_id',
-      as:'user',
-      onDelete:'CASCADE'
-    })
-  }
+  
   return Intern;
 };

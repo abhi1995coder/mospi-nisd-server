@@ -9,35 +9,32 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.createTable('attendences',{
-        attendence_id:{
-          primaryKey:true,
+    queryInterface.createTable('sub_offices',{
+        sub_office_id:{
           type:Sequelize.UUID,
-          allowNull:false,
-          defaultValue:Sequelize.literal('gen_random_uuid()')
+          primaryKey:true,
+          defaultValue:Sequelize.UUIDV4
         },
-        assignment_id:{
+        office_id:{
           type:Sequelize.UUID,
           allowNull:false,
           references:{
-            model:'assignments',
-            key:'assignment_id'
+            model:'offices',
+            key:'office_id'
           },
           onDelete:'CASCADE'
         },
-        date:{
-          type:Sequelize.DATE,
+        name:{
+          type:Sequelize.STRING,
           allowNull:false
         },
-        check_in:{
-          type:Sequelize.TIME
+        address:{
+          type:Sequelize.TEXT,
+          allowNull:true
         },
-        check_out:{
-          type:Sequelize.TIME
-        },
-        is_present:{
+        isActive:{
           type:Sequelize.BOOLEAN,
-          defaultValue:false
+          defaultValue:true
         },
         createdAt:{
           type:Sequelize.DATE,
@@ -48,7 +45,7 @@ module.exports = {
           type:Sequelize.DATE,
           defaultValue:Sequelize.fn('NOW'),
           allowNull:false
-        },
+        }
     })
   },
 
@@ -59,6 +56,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropTable('attendences')
+    queryInterface.dropTable('sub_offices')
   }
 };

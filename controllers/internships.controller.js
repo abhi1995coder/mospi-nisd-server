@@ -4,6 +4,7 @@ exports.createInternship=async(req,res)=>{
         const{
             office_id,
             title,
+            group_type,
             duration_months,
             start_date,
             end_date,
@@ -17,6 +18,7 @@ exports.createInternship=async(req,res)=>{
         const internship=await Internship.create({
             office_id,
             title,
+            group_type,
             duration_months,
             start_date,
             end_date,
@@ -46,7 +48,8 @@ exports.getAllInternship = async (req, res) => {
       where: whereClause,
       include: {
         model: Office,
-        attributes: ['office_id', 'name', 'state', 'city']
+        as:'office',
+        attributes: ['office_id', 'office_name', 'state', 'city']
       },
       order: [['start_date', 'ASC']]
     });

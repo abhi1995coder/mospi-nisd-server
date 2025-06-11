@@ -46,10 +46,10 @@ module.exports = (sequelize, DataTypes) => {
            defaultValue:'draft'
          },
          submission_date:{
-           type:DataTypes.DATE
+           type:DataTypes.DATEONLY
          },
          review_date:{
-           type:DataTypes.DATE
+           type:DataTypes.DATEONLY
          },
          rejection_reason:{
              type:DataTypes.TEXT

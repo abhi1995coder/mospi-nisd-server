@@ -1,16 +1,26 @@
-const express=require('express')
-const router=express.Router()
-const{authMiddleware,roleCheck}=require('../middlewares/auth.middleware')
+// routes/applications.routes.js
+const express = require('express');
+const router = express.Router();
+
 const {
-    createApplication,
-    getApplicationByInternId,
-    updateApplication,
-    submitApplication
-}=require('../controllers/applications.controller')
+  createApplication,
+  getApplicationByInternId,
+  submitPreferences,
+  submitApplication
+} = require('../controllers/applications.controller');
 
-router.post('/',authMiddleware,roleCheck('intern'),createApplication)
-router.get('/:internId',authMiddleware,roleCheck('super_admin','group_a_admin','group_b_admin'),getApplicationByInternId)
-router.patch('/:applicationId',authMiddleware,roleCheck('intern'),updateApplication)
-router.put('/:applicationId/submit',authMiddleware,roleCheck('intern'),submitApplication)
+const { authMiddleware } = require('../middlewares/auth.middleware');
 
-module.exports=router
+// Intern creates application
+router.post('/', authMiddleware, createApplication);
+
+// Intern submits internship preferences
+router.post('/:applicationId/preferences', authMiddleware, submitPreferences);
+
+// Intern final submission
+router.patch('/:applicationId/submit', authMiddleware, submitApplication);
+
+// View application by intern
+router.get('/intern/:internId', authMiddleware, getApplicationByInternId);
+
+module.exports = router;

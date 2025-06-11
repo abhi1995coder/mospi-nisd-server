@@ -41,7 +41,7 @@ app.use('/api/attendence',attendenceRoutes)
 app.use('/api/notice',noticeRoutes)*/
 
 app.get('/api/health',(req,res)=>{
-    res.json({staus:'UP',timestamp:new Date()})
+    res.json({status:'UP',timestamp:new Date()})
 })
 
 const PORT=process.env.PORT

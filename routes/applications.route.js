@@ -11,16 +11,16 @@ const {
 
 const { authMiddleware } = require('../middlewares/auth.middleware');
 
-// Intern creates application
+
 router.post('/', authMiddleware, createApplication);
 
-// Intern submits internship preferences
+
 router.post('/:applicationId/preferences', authMiddleware, submitPreferences);
 
-// Intern final submission
+
 router.patch('/:applicationId/submit', authMiddleware, submitApplication);
 
-// View application by intern
+
 router.get('/intern/:internId', authMiddleware, getApplicationByInternId);
 
 module.exports = router;

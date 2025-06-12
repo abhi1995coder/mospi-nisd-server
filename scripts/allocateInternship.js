@@ -1,72 +1,82 @@
+// Allocation script for MoSPI Internship Portal
+// This script assumes availability of:
+// - Applications: array of eligible applications
+// - Preferences: array of application preferences
+// - Internships: array of internship programs with available slots
 
-const { Application, ApplicationPreference, Internship, Intern } = require('../models');
-const { Sequelize } = require('sequelize');
+function allocateInternships(applications, preferences, internships) {
+  // Step 1: Filter only submitted and eligible applications
+  const eligible = applications.filter(app => app.status === 'submitted' && app.isEligible);
 
-exports.allocateInternships = async () => {
-  try {
-    
-    const applications = await Application.findAll({
-      where: { status: 'submitted' },
-      include: [
-        {
-          model: ApplicationPreference,
-          as: 'preferences',
-          order: [['preference_order', 'ASC']]
-        },
-        {
-          model: Intern,
-          attributes: ['intern_id', 'graduation_percentage'] 
-        }
-      ]
-    });
+  // Step 2: Attach score from verified percentage or fallback to 12th %
+  eligible.forEach(app => {
+    app.score = app.verified_percentage || app.calculated_percentage || app.twelve_percentage || 0;
+  });
 
-   
-    const sortedApplications = applications.sort((a, b) => {
-      return b.Intern.graduation_percentage - a.Intern.graduation_percentage;
-    });
+  // Step 3: Sort applications by descending merit score
+  eligible.sort((a, b) => b.score - a.score);
 
-  
-    const slotMap = {};
-    const internships = await Internship.findAll();
-    internships.forEach(int => {
-      slotMap[int.internship_id] = int.available_slots;
-    });
+  // Step 4: Build a map of available slots for internships
+  const slotMap = {}; // internship_id -> available slots
+  internships.forEach(intn => {
+    slotMap[intn.internship_id] = intn.available_slots;
+  });
 
-    const results = [];
+  // Step 5: Loop through each application and assign internships
+  const results = [];
 
-    
-    for (const app of sortedApplications) {
-      const preferences = app.preferences;
-      let assigned = false;
+  for (const app of eligible) {
+    const prefs = preferences
+      .filter(p => p.application_id === app.application_id)
+      .sort((a, b) => a.preference_order - b.preference_order);
 
-      for (const pref of preferences) {
-        const internshipId = pref.internship_id;
+    let assigned = false;
 
-        if (slotMap[internshipId] > 0) {
-          
-          await app.update({
-            selected_internship_id: internshipId,
-            selected_sub_office_id: pref.sub_office_id || null,
-            status: 'selected'
-          });
-
-          slotMap[internshipId]--;
-          results.push({ intern_id: app.intern_id, assigned: internshipId });
-          assigned = true;
-          break;
-        }
-      }
-
-      if (!assigned) {
-        await app.update({ status: 'waitlisted' });
-        results.push({ intern_id: app.intern_id, assigned: null });
+    for (const pref of prefs) {
+      const slotsLeft = slotMap[pref.internship_id];
+      if (slotsLeft > 0) {
+        slotMap[pref.internship_id]--;
+        results.push({
+          application_id: app.application_id,
+          intern_id: app.intern_id,
+          assigned_internship_id: pref.internship_id,
+          status: 'selected',
+          preference_order: pref.preference_order,
+          merit_score: app.score
+        });
+        assigned = true;
+        break;
       }
     }
 
-    console.log('Allocation complete');
-    return results;
-  } catch (err) {
-    console.error('Error during allocation:', err);
-    throw err;
+    // If no preferred internships available, assign fallback
+    if (!assigned) {
+      const fallback = Object.entries(slotMap).find(([_, slots]) => slots > 0);
+      if (fallback) {
+        slotMap[fallback[0]]--;
+        results.push({
+          application_id: app.application_id,
+          intern_id: app.intern_id,
+          assigned_internship_id: fallback[0],
+          status: 'selected_fallback',
+          preference_order: null,
+          merit_score: app.score
+        });
+      } else {
+        results.push({
+          application_id: app.application_id,
+          intern_id: app.intern_id,
+          assigned_internship_id: null,
+          status: 'waitlisted',
+          preference_order: null,
+          merit_score: app.score
+        });
+      }
+    }
   }
-};
+
+  return results;
+}
+
+// Export for use in routes or CLI
+module.exports = allocateInternships;

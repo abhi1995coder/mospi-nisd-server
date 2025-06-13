@@ -67,7 +67,7 @@ exports.submitApplication = async (req, res) => {
     }
 
     await application.update({
-      status: 'submitted',
+      application_status: 'submitted',
       submission_date: new Date()
     });
 

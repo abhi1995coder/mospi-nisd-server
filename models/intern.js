@@ -17,6 +17,11 @@ module.exports = (sequelize, DataTypes) => {
       as:'user',
       onDelete:'CASCADE'
     })
+    Intern.hasOne(models.Qualification, {
+    foreignKey: 'intern_id',
+    as: 'Qualification',
+    onDelete: 'CASCADE'
+  });
     }
   }
   Intern.init({

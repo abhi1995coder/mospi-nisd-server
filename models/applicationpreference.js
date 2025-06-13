@@ -53,15 +53,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         onDelete:'CASCADE'
       },
-      sub_office_id:{
-        type:DataTypes.UUID,
-        allowNull:true,
-        references:{
-          model:'sub_offices',
-          key:'sub_office_id'
-        },
-        onDelete:'CASCADE'
-      },
+      
       preferences:{
         type:DataTypes.INTEGER,
         allowNull:false,

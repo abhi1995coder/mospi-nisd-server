@@ -1,4 +1,4 @@
-// Sequelize-integrated allocation script for MoSPI Internship Portal
+
 const {
   Application,
   ApplicationPreference,
@@ -10,21 +10,27 @@ const allocateInternships = require('./allocateInternships');
 
 async function runAllocation() {
   try {
-    // 1. Load all internship programs
+    
+    
     const internships = await Internship.findAll();
-
-    // 2. Load all submitted applications + intern + qualification
+      
+    
     const applications = await Application.findAll({
-      where: { status: 'submitted' },
+      where: { application_status: 'submitted' },
       include: [
         {
           model: Intern,
-          include: [Qualification]
+          as:'intern',
+          include:{
+            model:Qualification,
+            as:'Qualification'
+          }
         }
       ]
     });
+    console.log('working till here')
 
-    // 3. Format applications for algorithm
+    
     const formattedApps = applications.map(app => {
       const qual = app.Intern?.Qualification;
       const isEligible = checkEligibility(qual);
@@ -39,13 +45,13 @@ async function runAllocation() {
       };
     });
 
-    // 4. Load preferences
+    
     const preferences = await ApplicationPreference.findAll();
 
-    // 5. Run allocation
+    
     const results = allocateInternships(formattedApps, preferences, internships);
 
-    // 6. Persist results
+   
     for (const result of results) {
       await Application.update(
         {
@@ -56,13 +62,13 @@ async function runAllocation() {
       );
     }
 
-    console.log('✅ Allocation completed successfully.');
+    console.log('Allocation completed successfully.');
   } catch (err) {
-    console.error('❌ Allocation error:', err);
+    console.error('Allocation error:', err);
   }
 }
 
-// Dummy eligibility check (to be replaced by real logic)
+
 function checkEligibility(qual) {
   if (!qual) return false;
   if (qual.education_level === 'undergraduate') {

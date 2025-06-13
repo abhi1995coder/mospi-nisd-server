@@ -29,16 +29,6 @@ module.exports = {
             type: Sequelize.ENUM('A', 'B'),
             allowNull:false
          },
-         internship_id:{
-            type:Sequelize.UUID,
-            allowNull:false,
-            references:{
-              model:'internships',
-              key:'internship_id'
-            },
-            onDelete:'CASCADE'
-         },
-         
          application_status:{
            type: Sequelize.ENUM('draft', 'submitted', 'under_review', 'accepted', 'rejected'),
            defaultValue:'draft'
@@ -74,5 +64,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
+    queryInterface.dropTable('applications')
   }
 };

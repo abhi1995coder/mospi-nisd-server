@@ -29,17 +29,15 @@ module.exports = (sequelize, DataTypes) => {
          intern_id:{
           type:DataTypes.UUID,
           allowNull:false,
-          
+          references:{
+            model:'interns',
+            key:'intern_id'
+          },
+          onDelete:'CASCADE'
          },
          group_type:{
             type: DataTypes.ENUM('A', 'B'),
             allowNull:false
-         },
-         preferred_offices:{
-           type:DataTypes.JSONB
-         },
-         sub_office_preferences:{
-            type:DataTypes.JSONB
          },
          application_status:{
            type: DataTypes.ENUM('draft', 'submitted', 'under_review', 'accepted', 'rejected'),

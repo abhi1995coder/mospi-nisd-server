@@ -5,7 +5,6 @@ const{sequelize}=require('./models')
 const helmet=require('helmet')
 const app=express()
 
-
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cors({
@@ -54,5 +53,6 @@ sequelize.authenticate().then(()=>{
 }).catch((err)=>{
     console.log('Failed to connect database for MOSPI NISD')
 })
+
 
 module.exports=app

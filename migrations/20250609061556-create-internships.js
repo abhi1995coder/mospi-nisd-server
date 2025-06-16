@@ -10,7 +10,7 @@ module.exports = {
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
     queryInterface.createTable('internships',{
-      internship_id:{
+      id:{
         type:Sequelize.UUID,
         primaryKey:true,
         defaultValue:Sequelize.UUIDV4
@@ -20,7 +20,7 @@ module.exports = {
         allowNull:false,
         references:{
           model:'offices',
-          key:'office_id'
+          key:'id'
         },
         onDelete:'CASCADE',
         onUpdate:'CASCADE'
@@ -58,12 +58,12 @@ module.exports = {
       createdAt:{
         type:Sequelize.DATE,
         allowNull:false,
-        defaultvalue:Sequelize.fn('NOW')
+        defaultvalue:Sequelize.NOW
       },
       updatedAt:{
         type:Sequelize.DATE,
         allowNull:false,
-        defaultValue:Sequelize.fn('NOW')
+        defaultValue:Sequelize.NOW
       }
     })
   },

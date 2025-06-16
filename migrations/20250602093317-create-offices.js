@@ -10,11 +10,11 @@ module.exports = {
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
     await queryInterface.createTable('offices',{
-        office_id:{
+        id:{
           type:Sequelize.UUID,
           primaryKey:true,
           allowNull:false,
-          defaultValue:Sequelize.literal('gen_random_uuid()')
+          defaultValue:Sequelize.UUIDV4
 
         },
         office_name:{
@@ -50,18 +50,19 @@ module.exports = {
           allowNull:false
         },
         
-        isActive:{
+        is_active:{
           type:Sequelize.BOOLEAN,
-          defaultValue:true
+          defaultValue:true,
+          allowNull:false
         },
         createdAt:{
            type:Sequelize.DATE,
            allowNull:false,
-           defaultValue:Sequelize.fn('NOW')
+           defaultValue:Sequelize.NOW
         },
         updatedAt:{
            type:Sequelize.DATE,
-           defaultValue:Sequelize.fn('NOW'),
+           defaultValue:Sequelize.NOW,
            allowNull:false
         }
 

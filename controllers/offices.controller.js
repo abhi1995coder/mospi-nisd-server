@@ -49,13 +49,13 @@ exports.updateOffice = async (req, res) => {
 };
 
 //  Delete office (admin only)
-exports.deleteOffice = async (req, res) => {
+exports.disableOffice = async (req, res) => {
   try {
     const office = await Office.findByPk(req.params.id);
     if (!office) return res.status(404).json({ message: 'Office not found' });
 
-    await office.destroy();
-    return res.status(200).json({ message: 'Office deleted' });
+    await office.update({is_active:false});
+    return res.status(200).json({ message: 'Office disabled' });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: 'Server error' });

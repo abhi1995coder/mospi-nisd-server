@@ -13,13 +13,13 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       SubOffice.belongsTo(models.Office,{
       foreignKey:'office_id',
-      as:'office',
+      as:'s_to_o',
       onDelete:'CASCADE'
     })
     }
   }
   SubOffice.init({
-     sub_office_id:{
+        id:{
           type:DataTypes.UUID,
           primaryKey:true,
           defaultValue:DataTypes.UUIDV4
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
           allowNull:false,
           references:{
             model:'offices',
-            key:'office_id'
+            key:'id'
           },
           onDelete:'CASCADE'
         },
@@ -41,9 +41,10 @@ module.exports = (sequelize, DataTypes) => {
           type:DataTypes.TEXT,
           allowNull:true
         },
-        isActive:{
+        is_active:{
           type:DataTypes.BOOLEAN,
-          defaultValue:true
+          defaultValue:true,
+          allowNull:true
         },
         createdAt:{
           type:DataTypes.DATE,

@@ -15,13 +15,13 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Qualification.belongsTo(models.Intern,{
       foreignKey:'intern_id',
-      as:'intern',
+      as:'q_to_in',
       onDelete:'CASCADE'
     })
     }
   }
   Qualification.init({
-    qualification_id:{
+       id:{
          primaryKey:true,
          type:DataTypes.UUID,
          allowNull:false,

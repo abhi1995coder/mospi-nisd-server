@@ -1,7 +1,7 @@
 'use strict';
 const {
   Model,
-  Sequelize
+  
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Office extends Model {
@@ -12,10 +12,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Office.hasMany(models.SubOffice,{
+        foreignKey:'office_id',
+        as:'o_to_s'
+      })
+      Office.hasMany(models.Internship,{
+        foreignKey:'office_id',
+        as:'o_to_i'
+      })
     }
   }
   Office.init({
-     office_id:{
+          id:{
           type:DataTypes.UUID,
           primaryKey:true,
           allowNull:false,
@@ -55,18 +63,19 @@ module.exports = (sequelize, DataTypes) => {
           allowNull:false
         },
         
-        isActive:{
+        is_active:{
           type:DataTypes.BOOLEAN,
-          defaultValue:true
+          defaultValue:true,
+          allowNull:false
         },
         createdAt:{
            type:DataTypes.DATE,
            allowNull:false,
-           defaultValue:Sequelize.fn('NOW')
+           defaultValue:DataTypes.NOW
         },
         updatedAt:{
            type:DataTypes.DATE,
-           defaultValue:Sequelize.fn('NOW'),
+           defaultValue:DataTypes.NOW,
            allowNull:false
         }
   }, {

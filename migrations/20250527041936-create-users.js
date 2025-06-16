@@ -4,7 +4,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('users', {
           id:{
-            allowedNull:false,
+            allowNull:false,
             primaryKey:true,
             type:Sequelize.UUID,
             defaultValue:Sequelize.UUIDV4,
@@ -36,7 +36,7 @@ module.exports = {
           is_verified:{
             type:Sequelize.BOOLEAN,
             defaultValue:false,
-            allowNUll:false
+            allowNull:false
           },
           is_active:{
             type:Sequelize.BOOLEAN,

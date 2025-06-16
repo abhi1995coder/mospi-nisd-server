@@ -10,11 +10,11 @@ module.exports = {
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
     await queryInterface.createTable('qualifications',{
-      qualification_id:{
+         id:{
          primaryKey:true,
          type:Sequelize.UUID,
          allowNull:false,
-         defaultValue:Sequelize.literal('gen_random_uuid()'),
+         defaultValue:Sequelize.UUIDV4,
 
       },
       intern_id:{
@@ -22,7 +22,7 @@ module.exports = {
         allowNull:false,
         references:{
           model:'interns',
-          key:'intern_id'
+          key:'id'
         },
         onDelete:'CASCADE'
 
@@ -72,12 +72,12 @@ module.exports = {
       createdAt:{
         type:Sequelize.DATE,
         allowNull:false,
-        defaultValue:Sequelize.fn('NOW')
+        defaultValue:Sequelize.NOW
       },
       updatedAt:{
         type:Sequelize.DATE,
         allowNull:false,
-        defaultValue:Sequelize.fn('NOW')
+        defaultValue:Sequelize.NOW
       }
 
 

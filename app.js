@@ -4,6 +4,7 @@ const  cors=require('cors')
 const{sequelize}=require('./models')
 const helmet=require('helmet')
 const app=express()
+const { swaggerUi, swaggerSpec } = require('./swagger');
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
@@ -25,7 +26,7 @@ const internshipRoutes=require('./routes/internships.route')
 const attendenceRoutes=require('./routes/attendences.route')
 const noticeRoutes=require('./routes/notices.route')*/
 
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 app.use('/api/auth',authRoutes)
 app.use('/api/admin',adminRoutes)
 app.use('/api/intern',internRoutes)

@@ -48,8 +48,8 @@ exports.getAllInternship = async (req, res) => {
       where: whereClause,
       include: {
         model: Office,
-        as:'office',
-        attributes: ['office_id', 'office_name', 'state', 'city']
+        as:'i_to_o',
+        attributes: ['id', 'office_name', 'state', 'city']
       },
       order: [['start_date', 'ASC']]
     });

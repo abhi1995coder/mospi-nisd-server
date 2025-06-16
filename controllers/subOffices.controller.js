@@ -14,7 +14,7 @@ exports.createSubOffice = async (req, res) => {
 // Get all active sub-offices
 exports.getAllSubOffices = async (req, res) => {
   try {
-    const subOffices = await SubOffice.findAll({ where: { isActive: true } });
+    const subOffices = await SubOffice.findAll({ where: { is_active: true } });
     res.status(200).json({ subOffices });
   } catch (err) {
     console.error(err);
@@ -25,8 +25,8 @@ exports.getAllSubOffices = async (req, res) => {
 // Get sub-offices for a specific office
 exports.getSubOfficesByOfficeId = async (req, res) => {
   try {
-    const { officeId } = req.params;
-    const subOffices = await SubOffice.findAll({ where: { office_id: officeId, isActive: true } });
+    const { id } = req.params;
+    const subOffices = await SubOffice.findAll({ where: { id: id, isActive: true } });
     res.status(200).json({ subOffices });
   } catch (err) {
     console.error(err);
@@ -54,7 +54,7 @@ exports.deactivateSubOffice = async (req, res) => {
     const subOffice = await SubOffice.findByPk(req.params.id);
     if (!subOffice) return res.status(404).json({ message: 'Sub-office not found' });
 
-    await subOffice.update({ isActive: false });
+    await subOffice.update({ is_active: false });
     res.status(200).json({ message: 'Sub-office deactivated' });
   } catch (err) {
     console.error(err);

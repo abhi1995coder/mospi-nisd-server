@@ -77,7 +77,7 @@ exports.requestOtpLogin = async (req, res) => {
     await sendOtp(email, otp);
 
     return res.status(200).json({
-      message: 'OTP sent to your registered email address',
+      message: 'OTP sent for login',
     });
   } catch (err) {
     console.error(err);

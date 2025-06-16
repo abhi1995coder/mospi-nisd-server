@@ -13,12 +13,12 @@ exports.createAdmin=async(req,res)=>{
       const hashedPassword=await bcrypt.hash(password,10)
 
       const newAdmin=await User.create({
-        user_id:uuidv4(),
-        user_name:name,
+        
+        name,
         email,
-        passwordHash:hashedPassword,
+        password_hash:hashedPassword,
         role,
-        isVerified:true
+        is_verified:true
       })
       res.status(201).json({message:`Admin created successfully as ${role}`,user_id:newAdmin.user_id})
 
@@ -28,19 +28,19 @@ exports.createAdmin=async(req,res)=>{
     }
 }
 exports.editAdmin=async(req,res)=>{
-  const{user_id}=req.params
+  const{id}=req.params
   const{name,email,role,password}=req.body
   if(role && !['group_a_admin','group_b_admin'].includes(role)){
     return res.status(400).json({message:'invalid role'})
   }
   try{
-    const user=await User.findOne({where:{user_id}})
+    const user=await User.findOne({where:{id}})
     if(!user || !['group_a_admin','group_b_admin'].includes(user.role)){
       return res,status(404).json({message:'Admin not found'})
     }
     const updateData={name,email,role}
     if(password){
-      updateData.passwordHash=await bcrypt.hash(password,10)
+      updateData.password_hash=await bcrypt.hash(password,10)
     }
     await user.update(updateData)
     res.status(200).json({message:'Admin updated successfully'})
@@ -51,13 +51,13 @@ exports.editAdmin=async(req,res)=>{
   }
 }
 exports.disableAdmin=async(req,res)=>{
-  const{user_id}=req.params
+  const{id}=req.params
   try{
-    const user=await User.findOne({where:{user_id}})
+    const user=await User.findOne({where:{id}})
     if(!user || ['group_a_admin','group_b_admin'].includes(user.role)){
       return res.status(404).json({message:'Admin not found'})
     }
-    await user.update({isActive:false})
+    await user.update({is_active:false})
     res.status(200).json({message:'Admin disabled successfully'})
 
   }catch(err){
@@ -71,7 +71,7 @@ exports.getAllAdmins=async(req,res)=>{
       where:{
         role:['group_a_admin','group_b_admin']
       },
-      attributes:['user_id','user_name','email','role','isActive','createdAt']
+      attributes:['id','name','email','role','is_active','createdAt']
     })
     res.status(200).json({admins})
   }catch(err){

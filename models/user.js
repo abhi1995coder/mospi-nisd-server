@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.init({
     id:{
-      allowedNull:false,
+      allowNull:false,
       primaryKey:true,
       type:DataTypes.UUID,
       defaultValue:DataTypes.UUIDV4,
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     password_hash:{
       type:DataTypes.STRING,
-      allowedNull:false
+      allowNull:false
     },
     role:{
       allowNull:false,
@@ -45,12 +45,12 @@ module.exports = (sequelize, DataTypes) => {
     is_verified:{
       type:DataTypes.BOOLEAN,
       defaultValue:false,
-      allowedNull:false
+      allowNull:false
     },
     is_active:{
       type:DataTypes.BOOLEAN,
       defaultValue:true,
-      allowedNull:false
+      allowNull:false
     },
     createdAt:{
       type:DataTypes.DATE,

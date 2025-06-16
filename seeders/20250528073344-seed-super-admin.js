@@ -18,16 +18,17 @@ module.exports = {
    const email=process.env.SUPER_ADMIN_EMAIL
    const password=process.env.SUPER_ADMIN_PASSWORD
    const hash=await bcrypt.hash(password,10)
+   const now = new Date();
    return queryInterface.bulkInsert('users',[{
-    user_id:uuidv4(),
-    user_name:name,
+    id:uuidv4(),
+    name,
     email,
-    passwordHash:hash,
+    password_hash:hash,
     role:'super_admin',
-    isVerified:true,
-    createdAt:new Date(),
-    updatedAt:new Date(),
-   }])
+    is_verified:true,
+    createdAt:now,
+    updatedAt:now
+  }])
   },
 
   down: async(queryInterface, Sequelize)=> {
@@ -37,6 +38,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    return queryInterface.bulkDelete('users',{email:'superadmin@gmail.com'})
+    return queryInterface.bulkDelete('users',{email:process.env.SUPER_ADMIN_EMAIL})
   }
 };

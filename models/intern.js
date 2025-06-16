@@ -14,18 +14,22 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Intern.belongsTo(models.User,{
       foreignKey:'user_id',
-      as:'user',
+      as:'in_to_u',
       onDelete:'CASCADE'
-    })
-    Intern.hasOne(models.Qualification, {
-    foreignKey: 'intern_id',
-    as: 'Qualification',
-    onDelete: 'CASCADE'
-  });
+      })
+     Intern.hasOne(models.Qualification,{
+       foreignKey:'intern_id',
+       as:'in_to_q'
+     })
+     Intern.hasMany(models.Intern,{
+      foreignKey:'intern_id',
+      as:'in_to_d'
+     })
+    
     }
   }
   Intern.init({
-    intern_id:{
+        id:{
           type:DataTypes.UUID,
           allowNull:false,
           defaultValue:DataTypes.UUIDV4,

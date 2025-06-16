@@ -14,13 +14,13 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Document.belongsTo(models.Intern,{
       foreignKey:'intern_id',
-      as:'intern',
+      as:'d_to_in',
       onDelete:'CASCADE'
     })
     }
   }
   Document.init({
-    document_id:{
+      id:{
          type:DataTypes.UUID,
          primaryKey:true,
          allowNull:false,

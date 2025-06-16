@@ -12,14 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
        Internship.belongsTo(models.Office,{
-      foreignKey:'office_id',
-      as:'office',
-      onDelete:'CASCADE'
+        foreignKey:'office_id',
+        as:'i_to_o',
+        onDelete:'CASCADE'
     })
     }
   }
   Internship.init({
-    internship_id: {
+    id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4

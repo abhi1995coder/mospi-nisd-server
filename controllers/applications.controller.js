@@ -2,14 +2,14 @@ const { Application, ApplicationPreference } = require('../models');
 
 exports.createApplication = async (req, res) => {
   try {
-    const { intern_id, group_type, internship_id } = req.body;
+    const { intern_id, group_type} = req.body;
 
     const application = await Application.create({
       intern_id,
       group_type,
-      internship_id,
-      status: 'draft',
-      submission_date: null
+    
+      
+      
     });
 
     res.status(201).json({ message: 'Application created', application });
@@ -57,7 +57,7 @@ exports.submitApplication = async (req, res) => {
   try {
     const { applicationId } = req.params;
 
-    const application = await Application.findByPk(applicationId);
+    const application = await Application.findByPk(id);
     if (!application) {
       return res.status(404).json({ message: 'Application not found' });
     }
@@ -84,7 +84,7 @@ exports.getApplicationByInternId = async (req, res) => {
 
     const applications = await Application.findAll({
       where: { intern_id: internId },
-      include: ['Preferences'] // if associations are defined
+      include: ['Preferences'] 
     });
 
     res.status(200).json({ applications });

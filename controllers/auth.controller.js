@@ -16,9 +16,9 @@ exports.register=async(req,res)=>{
       if(existing) return res.status(400).json({message:'Email already exists'})
       await User.create({
         email,
-        passwordHash:hashedPassword,
-        otpCode:otp,
-        otpExpiresAt:expiresAt,
+        password_hash:hashedPassword,
+        otp_code:otp,
+        otp_expires_at:expiresAt,
         role:'intern',
         })
         await sendOtp(email,otp)
@@ -36,12 +36,12 @@ exports.verifyOtp=async(req,res)=>{
 
        if(!user) return res.status(404).json({message:'User not found'})
 
-       if(user.isVerified) return res.status(400).json({message:'Already Verified'})
-       if(user.otpCode!=otp || new Date()>user.otpExpiresAt) return res.status(400).json({message:'invalid or expired otp'})
+       if(user.is_verified) return res.status(400).json({message:'Already Verified'})
+       if(user.otp_code!=otp || new Date()>user.otp_expires_at) return res.status(400).json({message:'invalid or expired otp'})
 
-       await user.update({isVerified:true,otpCode:null,otpExpiresAt:null})
-       const token=jwt.sign({id:user.id,role:user.role,email:user.email},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRES_IN})
-       res.status(200).json({message:'OTP verified',token})
+       await user.update({is_verified:true,otp_code:null,otp_expires_at:null})
+       //const token=jwt.sign({id:user.id,role:user.role,email:user.email},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRES_IN})
+       res.status(200).json({message:'OTP verified'})
    }catch(err){
     console.log(err)
     res.status(500).json({message:'Server error'})
@@ -59,19 +59,19 @@ exports.requestOtpLogin = async (req, res) => {
     if (!user)
       return res.status(404).json({ message: 'User not found' });
 
-    if (!user.isVerified)
+    if (!user.is_verified)
       return res.status(403).json({ message: 'Account not verified' });
 
-    if (!user.isActive)
+    if (!user.is_active)
       return res.status(403).json({ message: 'Account disabled' });
 
-    const match = await bcrypt.compare(password, user.passwordHash);
+    const match = await bcrypt.compare(password, user.password_hash);
     if (!match)
       return res.status(400).json({ message: 'Invalid password' });
 
     await user.update({
-      otpCode: otp,
-      otpExpiresAt: expiresAt,
+      otp_code: otp,
+      otp_expires_at: expiresAt,
     });
 
     await sendOtp(email, otp);
@@ -96,8 +96,8 @@ exports.login = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
 
     if (
-      user.otpCode !== otp ||
-      new Date() > user.otpExpiresAt
+      user.otp_code !== otp ||
+      new Date() > user.otp_expires_at
     ) {
       return res.status(400).json({
         message: 'Invalid or expired OTP',
@@ -105,11 +105,11 @@ exports.login = async (req, res) => {
     }
 
 
-    await user.update({ otpCode: null, otpExpiresAt: null });
+    await user.update({ otp_code: null, otp_expires_at: null });
 
     const token = jwt.sign(
       {
-        user_id: user.user_id,
+        id: user.id,
         role: user.role,
         email: user.email,
       },
@@ -133,7 +133,7 @@ exports.requestPasswordReset=async(req,res)=>{
     const user=await User.findOne({where:{email}})
     if(!user) return res.status(404).json({message:'Invalid credentials'})
 
-    await user.update({otpCode:otp,otpExpiresAt:expiresAt})
+    await user.update({otp_code:otp,otp_expires_at:expiresAt})
     await sendOtp(email,otp)
 
     res.status(200).json({message:'OTP sent for password reset'})
@@ -146,10 +146,10 @@ exports.resetPassword=async(req,res)=>{
    const{email,otp,new_password}=req.body
    try{
     const user=await User.findOne({where:{email}})
-    if(!user || user.otpCode!=otp || new Date()>user.otpExpiresAt) return res.status(400).json({message:'Invalid otp or expired '})
+    if(!user || user.otp_code!=otp || new Date()>user.otp_expires_at) return res.status(400).json({message:'Invalid otp or expired '})
 
     const hashed=await bcrypt.hash(new_password,10)
-    await user.update({passwordHash:hashed,otpCode:null,otpExpiresAt:null})
+    await user.update({password_hash:hashed,otp_code:null,otp_expires_at:null})
     res.status(200).json({message:'Password reset successfull'})
     }catch(err){
     console.log(err)

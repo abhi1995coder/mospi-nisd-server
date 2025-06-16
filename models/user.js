@@ -1,61 +1,56 @@
 'use strict';
 const {
   Model,
-  
+
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+
     static associate(models) {
-      // define association here
-      User.hasOne(models.Intern,{
-        foreignKey:'user_id',
-        as:'user',
-        onDelete:'CASCADE'
-      })
+
+
     }
   }
   User.init({
-    user_id:{
+    id:{
       allowedNull:false,
       primaryKey:true,
       type:DataTypes.UUID,
       defaultValue:DataTypes.UUIDV4,
     },
-    user_name:{
+    name:{
       type:DataTypes.STRING,
-      allowNull:true,
+
     },
     email:{
       type:DataTypes.STRING,
       unique:true,
       allowNull:false,
     },
-    passwordHash:{
+    password_hash:{
       type:DataTypes.STRING,
+      allowedNull:false
     },
     role:{
       allowNull:false,
       type:DataTypes.STRING,
       defaultValue:'intern',
     },
-    otpCode:{
+    otp_code:{
       type:DataTypes.STRING
     },
-    otpExpiresAt:{
+    otp_expires_at:{
       type:DataTypes.DATE
     },
-    isVerified:{
+    is_verified:{
       type:DataTypes.BOOLEAN,
       defaultValue:false,
+      allowedNull:false
     },
-    isActive:{
+    is_active:{
       type:DataTypes.BOOLEAN,
       defaultValue:true,
+      allowedNull:false
     },
     createdAt:{
       type:DataTypes.DATE,

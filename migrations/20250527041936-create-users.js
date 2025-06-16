@@ -3,40 +3,42 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('users', {
-      user_id:{
+          id:{
             allowedNull:false,
             primaryKey:true,
             type:Sequelize.UUID,
-            defaultValue:Sequelize.literal('gen_random_uuid()'),
+            defaultValue:Sequelize.UUIDV4,
           },
-          user_name:{
+          name:{
             type:Sequelize.STRING,
-            allowNull:true
+
           },
           email:{
             type:Sequelize.STRING,
             unique:true,
             allowNull:false,
           },
-          passwordHash:{
+          password_hash:{
             type:Sequelize.STRING,
+            allowNull:false
           },
           role:{
             allowNull:false,
             type:Sequelize.ENUM('intern','group_a_admin','group_b_admin','super_admin'),
             defaultValue:'intern',
           },
-          otpCode:{
+          otp_code:{
             type:Sequelize.STRING
           },
-          otpExpiresAt:{
+          otp_expires_at:{
             type:Sequelize.DATE
           },
-          isVerified:{
+          is_verified:{
             type:Sequelize.BOOLEAN,
             defaultValue:false,
+            allowNUll:false
           },
-          isActive:{
+          is_active:{
             type:Sequelize.BOOLEAN,
             defaultValue:true,
             allowNull:false,
@@ -44,12 +46,12 @@ module.exports = {
           createdAt:{
             type:Sequelize.DATE,
             allowNull:false,
-            defaultValue:Sequelize.fn('NOW'),
+            defaultValue:Sequelize.NOW,
           },
           updatedAt:{
             type:Sequelize.DATE,
             allowNull:false,
-            defaultValue:Sequelize.fn('NOW'),
+            defaultValue:Sequelize.NOW,
           }
     });
   },

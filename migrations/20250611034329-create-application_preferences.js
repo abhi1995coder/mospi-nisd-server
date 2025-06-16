@@ -33,6 +33,12 @@ module.exports = {
         },
         onDelete:'CASCADE'
       },
+      sub_office_id:{
+        type: Sequelize.UUID,
+        allowNull: true,
+        references: { model: 'sub_offices', key: 'id' },
+        onDelete: 'SET NULL'
+      },
 
       preferences_order:{
         type:Sequelize.INTEGER,

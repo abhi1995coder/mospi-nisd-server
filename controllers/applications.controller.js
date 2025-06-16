@@ -1,4 +1,5 @@
-const { Application, ApplicationPreference } = require('../models');
+const { Application, ApplicationPreference,Internship} = require('../models');
+const { checkEligibility } = require('../utility/eligibility');
 
 exports.createApplication = async (req, res) => {
   try {
@@ -22,59 +23,125 @@ exports.createApplication = async (req, res) => {
 exports.submitPreferences = async (req, res) => {
   try {
     const { applicationId } = req.params;
-    const preferences = req.body.preferences;
+    const { preferences } = req.body;
 
+    // Validate that preferences is a non-empty array
     if (!Array.isArray(preferences) || preferences.length === 0) {
       return res.status(400).json({ message: 'Preferences are required' });
     }
 
-    const existingApp = await Application.findByPk(applicationId);
-    if (!existingApp) {
-      return res.status(404).json({ message: 'Application not found' });
-    }
-
-    // Remove old preferences if any
-    await ApplicationPreference.destroy({ where: { application_id: applicationId } });
-
-    // Add new preferences
-    const records = preferences.map((pref, index) => ({
-      application_id: applicationId,
-      internship_id: pref.internship_id,
-
-      preferences_order: index + 1
-    }));
-
-    await ApplicationPreference.bulkCreate(records);
-
-    res.status(201).json({ message: 'Preferences submitted successfully' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error', error: err.message });
-  }
-};
-
-exports.submitApplication = async (req, res) => {
-  try {
-    const { applicationId } = req.params;
-
+    // Fetch the application
     const application = await Application.findByPk(applicationId);
     if (!application) {
       return res.status(404).json({ message: 'Application not found' });
     }
 
-    if (application.status === 'submitted') {
+    // Enforce Group A vs Group B rules
+    if (application.group_type === 'A') {
+      // Group A: allow one or more preferences
+      if (preferences.length < 1) {
+        return res
+          .status(400)
+          .json({ message: 'At least one preference is required for Group A applications' });
+      }
+    } else if (application.group_type === 'B') {
+      // Group B: exactly one preference
+      if (preferences.length !== 1) {
+        return res
+          .status(400)
+          .json({ message: 'Exactly one preference is required for Group B applications' });
+      }
+    } else {
+      return res.status(400).json({ message: 'Invalid group_type on application' });
+    }
+
+    // Validate that all internship IDs exist
+    const internshipIds = preferences.map(p => p.internship_id);
+    const internships = await Internship.findAll({
+      where: { id: internshipIds }
+    });
+    if (internships.length !== internshipIds.length) {
+      return res.status(400).json({ message: 'One or more internship IDs are invalid' });
+    }
+
+    // Ensure the internships belong to the same group_type as the application
+    for (const internship of internships) {
+      if (internship.group_type !== application.group_type) {
+        return res.status(400).json({
+          message: `Internship ${internship.id} does not belong to group ${application.group_type}`
+        });
+      }
+    }
+
+    // Remove any existing preferences
+    await ApplicationPreference.destroy({
+      where: { application_id: applicationId }
+    });
+
+    // Insert the new preferences
+    const records = preferences.map(pref => ({
+      application_id: applicationId,
+      internship_id: pref.internship_id,
+      preference_order: pref.preference_order
+    }));
+    await ApplicationPreference.bulkCreate(records);
+
+    return res.status(201).json({ message: 'Preferences submitted successfully' });
+  } catch (error) {
+    console.error('Error in submitPreferences:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.submitApplication = async (req, res) => {
+  const { applicationId } = req.params;
+  try {
+    // Load application + intern + their qualification
+    const application = await Application.findByPk(applicationId, {
+      include: {
+        model: Intern,
+        as: 'a_to_in',             // adjust alias if yours differs
+        include: {
+          model: Qualification,
+          as: 'in_to_q'            // adjust alias if yours differs
+        }
+      }
+    });
+    if (!application) {
+      return res.status(404).json({ message: 'Application not found' });
+    }
+
+    // Only allow moving from draft → submitted once
+    if (application.application_status === 'submitted') {
       return res.status(400).json({ message: 'Application already submitted' });
     }
 
+    // Check eligibility
+    const qual = application.a_to_in?.in_to_q;
+    const eligible = checkEligibility(qual);
+    if (!eligible) {
+      await application.update({
+        application_status: 'rejected',
+        rejection_reason: 'Does not meet academic eligibility criteria',
+        review_date: new Date()
+      });
+      return res
+        .status(200)
+        .json({ message: 'Application rejected: eligibility criteria not met' });
+    }
+
+    // Mark as submitted
     await application.update({
       application_status: 'submitted',
       submission_date: new Date()
     });
 
-    res.status(200).json({ message: 'Application submitted successfully' });
+    return res
+      .status(200)
+      .json({ message: 'Application submitted successfully' });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error', error: err.message });
+    console.error('Error in submitApplication:', err);
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 

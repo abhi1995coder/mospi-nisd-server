@@ -20,7 +20,12 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey:'internship_id',
       as:'ap_to_i',
       onDelete:'CASCADE'
-    })
+      })
+      ApplicationPreference.belongsTo(models.SubOffice,{
+      foreignKey:'sub_office_id',
+      as:'ap_to_s',
+      onDelete:'SET NULL'
+      })
 
     }
   }
@@ -49,6 +54,13 @@ module.exports = (sequelize, DataTypes) => {
         },
         onDelete:'CASCADE'
       },
+      sub_office_id: {
+       type:DataTypes.UUID,
+       allowNull: true,
+       references: { model: 'sub_offices', key: 'id' },
+       onDelete: 'SET NULL'
+      },
+
 
       preferences_order:{
         type:DataTypes.INTEGER,

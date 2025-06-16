@@ -1,37 +1,38 @@
 function allocateInternships(applications, preferences, internships) {
-  const eligible = applications.filter(app => app.application_status === 'submitted' && app.isEligible);
-
-  eligible.forEach(app => {
-    app.score = app.verified_percentage || app.calculated_percentage || app.twelth_percentage || 0;
+  // All apps in here are already "submitted" & eligible
+  // Score them:
+  applications.forEach(app => {
+    app.score = app.verified_percentage
+             ?? app.calculated_percentage
+             ?? app.twelth_percentage
+             ?? 0;
   });
 
-  eligible.sort((a, b) => b.score - a.score);
+  // Sort by descending score
+  applications.sort((a, b) => b.score - a.score);
 
+  // Build slots map
   const slotMap = {};
-  internships.forEach(intn => {
-    slotMap[intn.id] = intn.available_slots;
-  });
+  internships.forEach(i => { slotMap[i.id] = i.available_slots; });
 
   const results = [];
 
-  for (const app of eligible) {
+  for (const app of applications) {
     const prefs = preferences
       .filter(p => p.application_id === app.application_id)
       .sort((a, b) => a.preference_order - b.preference_order);
 
     let assigned = false;
-
-    for (const pref of prefs) {
-      const slotsLeft = slotMap[pref.internship_id];
-      if (slotsLeft > 0) {
-        slotMap[pref.internship_id]--;
+    for (const p of prefs) {
+      if (slotMap[p.internship_id] > 0) {
+        slotMap[p.internship_id]--;
         results.push({
-          application_id: app.application_id,
-          intern_id: app.intern_id,
-          assigned_internship_id: pref.internship_id,
-          status: 'selected',
-          preference_order: pref.preference_order,
-          merit_score: app.score
+          application_id:  app.application_id,
+          intern_id:       app.intern_id,
+          assigned_internship_id: p.internship_id,
+          status:          'selected',
+          preference_order:p.preference_order,
+          merit_score:     app.score
         });
         assigned = true;
         break;
@@ -39,25 +40,26 @@ function allocateInternships(applications, preferences, internships) {
     }
 
     if (!assigned) {
-      const fallback = Object.entries(slotMap).find(([_, slots]) => slots > 0);
+      // fallback or waitlist
+      const fallback = Object.entries(slotMap).find(([, slots]) => slots > 0);
       if (fallback) {
         slotMap[fallback[0]]--;
         results.push({
-          application_id: app.application_id,
-          intern_id: app.intern_id,
+          application_id:  app.application_id,
+          intern_id:       app.intern_id,
           assigned_internship_id: fallback[0],
-          status: 'selected_fallback',
-          preference_order: null,
-          merit_score: app.score
+          status:          'selected_fallback',
+          preference_order:null,
+          merit_score:     app.score
         });
       } else {
         results.push({
-          application_id: app.application_id,
-          intern_id: app.intern_id,
+          application_id:  app.application_id,
+          intern_id:       app.intern_id,
           assigned_internship_id: null,
-          status: 'waitlisted',
-          preference_order: null,
-          merit_score: app.score
+          status:          'waitlisted',
+          preference_order:null,
+          merit_score:     app.score
         });
       }
     }

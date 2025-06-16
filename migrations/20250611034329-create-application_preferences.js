@@ -10,7 +10,7 @@ module.exports = {
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
     queryInterface.createTable('application_preferences',{
-      ap_id:{
+      id:{
         type:Sequelize.UUID,
         primaryKey:true,
         defaultValue:Sequelize.UUIDV4
@@ -20,7 +20,7 @@ module.exports = {
         allowNull:false,
         references:{
           model:'applications',
-          key:'application_id'
+          key:'id'
         },
         onDelete:'CASCADE'
       },
@@ -29,7 +29,7 @@ module.exports = {
         allowNull:false,
         references:{
           model:'internships',
-          key:'internship_id'
+          key:'id'
         },
         onDelete:'CASCADE'
       },

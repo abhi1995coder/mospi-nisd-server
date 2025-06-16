@@ -15,7 +15,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:'office_id',
         as:'i_to_o',
         onDelete:'CASCADE'
-    })
+       })
+       Internship.hasMany(models.ApplicationPreference,{
+        foreignKey:'internship_id',
+        as:'i_to_ap'
+       })
     }
   }
   Internship.init({

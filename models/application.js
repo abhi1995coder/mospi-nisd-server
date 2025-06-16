@@ -12,15 +12,19 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-       Application.belongsTo(models.Intern,{
-      foreignKey:'intern_id',
-      as:'intern',
+      Application.belongsTo(models.Intern,{
+       foreignKey:'intern_id',
+       as:'a_to_in',
       onDelete:'CASCADE'
-       })
+      })
+      Application.hasMany(models.ApplicationPreference,{
+        foreignKey:'application_id',
+        as:'a_to_ap'
+      })
     }
   }
   Application.init({
-    application_id:{
+        id:{
           type:DataTypes.UUID,
           allowNull:false,
           primaryKey:true,
@@ -31,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
           allowNull:false,
           references:{
             model:'interns',
-            key:'intern_id'
+            key:'id'
           },
           onDelete:'CASCADE'
          },

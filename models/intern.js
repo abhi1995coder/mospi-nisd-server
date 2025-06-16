@@ -21,9 +21,13 @@ module.exports = (sequelize, DataTypes) => {
        foreignKey:'intern_id',
        as:'in_to_q'
      })
-     Intern.hasMany(models.Intern,{
+     Intern.hasMany(models.Document,{
       foreignKey:'intern_id',
       as:'in_to_d'
+     })
+     Intern.hasOne(models.Application,{
+      foreignKey:'intern_id',
+      as:'in_to_a'
      })
     
     }

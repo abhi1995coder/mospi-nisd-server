@@ -13,24 +13,20 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       ApplicationPreference.belongsTo(models.Application,{
       foreignKey:'application_id',
-      as:'application',
+      as:'ap_to_a',
       onDelete:'CASCADE'
       })
       ApplicationPreference.belongsTo(models.Internship,{
       foreignKey:'internship_id',
-      as:'internship',
+      as:'ap_to_i',
       onDelete:'CASCADE'
     })
-    ApplicationPreference.belongsTo(models.SubOffice,{
-      foreignKey:'sub_office_id',
-      as:'sub_office',
-      onDelete:'CASCADE'
-    })
+    
     }
   }
   ApplicationPreference.init({
     
-     ap_id:{
+      id:{
         type:DataTypes.UUID,
         primaryKey:true,
         defaultValue:DataTypes.UUIDV4

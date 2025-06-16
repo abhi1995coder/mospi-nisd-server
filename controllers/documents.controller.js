@@ -14,15 +14,15 @@ exports.uploadDocument = async (req, res) => {
     const intern = await Intern.findOne({ where: { user_id } });
     if (!intern) return res.status(404).json({ message: 'Intern not found' });
 
-    const file_url = `uploads/${Date.now()}_${file.originalname}`; 
+    const file_url = `uploads/${Date.now()}_${file.originalname}`;
 
-    
+
 
     const document = await Document.create({
-      intern_id: intern.intern_id,
+      intern_id: intern.id,
       document_type,
       document_url:file_url,
-      status: 'pending',
+      verification_status: 'pending',
     });
 
     res.status(201).json({ message: 'Document uploaded', document });
@@ -52,3 +52,23 @@ exports.getDocumentsByIntern = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
+exports.verifyDocument = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!['verified', 'rejected'].includes(status)) {
+      return res.status(400).json({ message: 'Invalid status. Use "verified" or "rejected".' });
+    }
+
+    const document = await Document.findByPk(id);
+    if (!document) return res.status(404).json({ message: 'Document not found' });
+
+    await document.update({ verification_status: status });
+    res.status(200).json({ message: `Document ${status}`, document });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+

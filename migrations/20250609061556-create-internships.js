@@ -51,14 +51,14 @@ module.exports = {
         defaultValue:0
       },
       status:{
-        type:Sequelize.ENUM('draft','active','closed'),
+        type:Sequelize.ENUM('active','closed'),
         allowNull:false,
         defaultValue:'draft'
       },
       createdAt:{
         type:Sequelize.DATE,
         allowNull:false,
-        defaultvalue:Sequelize.NOW
+        defaultValue:Sequelize.NOW
       },
       updatedAt:{
         type:Sequelize.DATE,

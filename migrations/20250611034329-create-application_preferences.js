@@ -33,8 +33,8 @@ module.exports = {
         },
         onDelete:'CASCADE'
       },
-      
-      preferences:{
+
+      preferences_order:{
         type:Sequelize.INTEGER,
         allowNull:false,
 

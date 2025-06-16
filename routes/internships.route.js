@@ -155,4 +155,38 @@ router.get('/:id', internshipController.getInternshipById);
  */
 router.put('/:id', authMiddleware, roleCheck('super_admin', 'group_a_admin', 'group_b_admin'), internshipController.updateInternship);
 
+/**
+ * @swagger
+ * /internships/{id}/status:
+ *   patch:
+ *     summary: Toggle internship status between active and closed
+ *     tags: [Internships]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the internship
+ *     responses:
+ *       200:
+ *         description: Internship status updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       404:
+ *         description: Internship not found
+ *       500:
+ *         description: Server error
+ */
+
+router.patch('/:id/status', authMiddleware, roleCheck('super_admin', 'group_a_admin', 'group_b_admin'), internshipController.toggleStatus);
+
+
 module.exports = router;

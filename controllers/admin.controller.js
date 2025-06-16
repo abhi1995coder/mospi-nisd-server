@@ -13,7 +13,7 @@ exports.createAdmin=async(req,res)=>{
       const hashedPassword=await bcrypt.hash(password,10)
 
       const newAdmin=await User.create({
-        
+
         name,
         email,
         password_hash:hashedPassword,
@@ -36,7 +36,7 @@ exports.editAdmin=async(req,res)=>{
   try{
     const user=await User.findOne({where:{id}})
     if(!user || !['group_a_admin','group_b_admin'].includes(user.role)){
-      return res,status(404).json({message:'Admin not found'})
+      return res.status(404).json({message:'Admin not found'})
     }
     const updateData={name,email,role}
     if(password){
@@ -54,7 +54,7 @@ exports.disableAdmin=async(req,res)=>{
   const{id}=req.params
   try{
     const user=await User.findOne({where:{id}})
-    if(!user || ['group_a_admin','group_b_admin'].includes(user.role)){
+    if(!user || !['group_a_admin','group_b_admin'].includes(user.role)){
       return res.status(404).json({message:'Admin not found'})
     }
     await user.update({is_active:false})

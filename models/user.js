@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     role:{
       allowNull:false,
-      type:DataTypes.STRING,
+      type: DataTypes.ENUM('intern', 'group_a_admin', 'group_b_admin', 'super_admin'),
       defaultValue:'intern',
     },
     otp_code:{

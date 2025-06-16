@@ -9,7 +9,7 @@ exports.createInternship=async(req,res)=>{
             start_date,
             end_date,
             available_slots,
-            status
+
         }=req.body
         const office=await Office.findByPk(office_id)
         if(!office){
@@ -23,7 +23,7 @@ exports.createInternship=async(req,res)=>{
             start_date,
             end_date,
             available_slots,
-            status
+
         })
         res.status(201).json({message:'Internship created',internship})
 
@@ -86,3 +86,18 @@ exports.updateInternship=async(req,res)=>{
         return res.status(500).json({message:'Internal server error'})
     }
 }
+exports.toggleStatus = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const internship = await Internship.findByPk(id);
+    if (!internship) return res.status(404).json({ message: 'Internship not found' });
+
+    const newStatus = internship.status === 'active' ? 'closed' : 'active';
+    await internship.update({ status: newStatus });
+
+    return res.status(200).json({ message: `Internship status updated to ${newStatus}` });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};

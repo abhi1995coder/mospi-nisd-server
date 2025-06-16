@@ -26,7 +26,7 @@ exports.getAllSubOffices = async (req, res) => {
 exports.getSubOfficesByOfficeId = async (req, res) => {
   try {
     const { id } = req.params;
-    const subOffices = await SubOffice.findAll({ where: { id: id, isActive: true } });
+    const subOffices = await SubOffice.findAll({ where: { office_id: id, isActive: true } });
     res.status(200).json({ subOffices });
   } catch (err) {
     console.error(err);

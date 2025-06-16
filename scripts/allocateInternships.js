@@ -1,24 +1,17 @@
-
-
 function allocateInternships(applications, preferences, internships) {
-  
-  const eligible = applications.filter(app => app.status === 'submitted' && app.isEligible);
+  const eligible = applications.filter(app => app.application_status === 'submitted' && app.isEligible);
 
-  
   eligible.forEach(app => {
-    app.score = app.verified_percentage || app.calculated_percentage || app.twelve_percentage || 0;
+    app.score = app.verified_percentage || app.calculated_percentage || app.twelth_percentage || 0;
   });
 
-  
   eligible.sort((a, b) => b.score - a.score);
 
-  
   const slotMap = {};
   internships.forEach(intn => {
-    slotMap[intn.internship_id] = intn.available_slots;
+    slotMap[intn.id] = intn.available_slots;
   });
 
-  
   const results = [];
 
   for (const app of eligible) {
@@ -45,7 +38,6 @@ function allocateInternships(applications, preferences, internships) {
       }
     }
 
-    
     if (!assigned) {
       const fallback = Object.entries(slotMap).find(([_, slots]) => slots > 0);
       if (fallback) {
@@ -73,6 +65,5 @@ function allocateInternships(applications, preferences, internships) {
 
   return results;
 }
-
 
 module.exports = allocateInternships;

@@ -21,11 +21,11 @@ module.exports = (sequelize, DataTypes) => {
       as:'ap_to_i',
       onDelete:'CASCADE'
     })
-    
+
     }
   }
   ApplicationPreference.init({
-    
+
       id:{
         type:DataTypes.UUID,
         primaryKey:true,
@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull:false,
         references:{
           model:'applications',
-          key:'application_id'
+          key:'id'
         },
         onDelete:'CASCADE'
       },
@@ -45,12 +45,12 @@ module.exports = (sequelize, DataTypes) => {
         allowNull:false,
         references:{
           model:'internships',
-          key:'internship_id'
+          key:'id'
         },
         onDelete:'CASCADE'
       },
-      
-      preferences:{
+
+      preferences_order:{
         type:DataTypes.INTEGER,
         allowNull:false,
 

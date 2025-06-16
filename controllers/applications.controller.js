@@ -7,9 +7,9 @@ exports.createApplication = async (req, res) => {
     const application = await Application.create({
       intern_id,
       group_type,
-    
-      
-      
+
+
+
     });
 
     res.status(201).json({ message: 'Application created', application });
@@ -40,8 +40,8 @@ exports.submitPreferences = async (req, res) => {
     const records = preferences.map((pref, index) => ({
       application_id: applicationId,
       internship_id: pref.internship_id,
-      sub_office_id: pref.sub_office_id || null,
-      preference_order: index + 1
+
+      preferences_order: index + 1
     }));
 
     await ApplicationPreference.bulkCreate(records);
@@ -57,7 +57,7 @@ exports.submitApplication = async (req, res) => {
   try {
     const { applicationId } = req.params;
 
-    const application = await Application.findByPk(id);
+    const application = await Application.findByPk(applicationId);
     if (!application) {
       return res.status(404).json({ message: 'Application not found' });
     }
@@ -84,7 +84,7 @@ exports.getApplicationByInternId = async (req, res) => {
 
     const applications = await Application.findAll({
       where: { intern_id: internId },
-      include: ['Preferences'] 
+      include: ['Preferences']
     });
 
     res.status(200).json({ applications });

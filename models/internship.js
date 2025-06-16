@@ -64,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0
     },
     status: {
-      type: DataTypes.ENUM('draft', 'active', 'closed'),
+      type: DataTypes.ENUM( 'active', 'closed'),
       allowNull: false,
       defaultValue: 'draft'
     },
@@ -78,12 +78,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: DataTypes.NOW
     }
-   
+
   }, {
     sequelize,
     modelName: 'Internship',
     tableName: 'internships',
   });
-    
+
   return Internship;
 };

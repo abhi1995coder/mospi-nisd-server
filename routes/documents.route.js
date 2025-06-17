@@ -8,7 +8,7 @@ const { uploadSingleDocument } = require('../middlewares/documents.validator');
 
 /**
  * @swagger
- * /documents:
+ * /document:
  *   post:
  *     summary: Upload a document for the intern
  *     tags: [Documents]
@@ -53,7 +53,7 @@ router.post('/', authMiddleware, roleCheck('intern'), uploadSingleDocument, uplo
 
 /**
  * @swagger
- * /documents:
+ * /document:
  *   get:
  *     summary: Get all documents uploaded by the intern
  *     tags: [Documents]
@@ -92,7 +92,7 @@ router.get('/',authMiddleware,roleCheck('intern'),getDocumentsByIntern);
 
 /**
  * @swagger
- * /documents/{id}/verify:
+ * /document/{id}/verify:
  *   patch:
  *     summary: Verify or reject a submitted document
  *     tags: [Documents]

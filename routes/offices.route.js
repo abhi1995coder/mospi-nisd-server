@@ -20,7 +20,7 @@ const { authMiddleware, roleCheck } = require('../middlewares/auth.middleware');
 
 /**
  * @swagger
- * /offices:
+ * /office:
  *   post:
  *     summary: Create a new office
  *     tags: [Offices]
@@ -68,7 +68,7 @@ router.post('/', authMiddleware, roleCheck('super_admin', 'group_a_admin', 'grou
 
 /**
  * @swagger
- * /offices:
+ * /office:
  *   get:
  *     summary: Get all offices
  *     tags: [Offices]
@@ -93,7 +93,7 @@ router.get('/', authMiddleware, getAllOffices);
 
 /**
  * @swagger
- * /offices/{id}:
+ * /office/{id}:
  *   get:
  *     summary: Get a single office by ID
  *     tags: [Offices]
@@ -118,7 +118,7 @@ router.get('/:id', authMiddleware, getOfficeById);
 
 /**
  * @swagger
- * /offices/{id}:
+ * /office/{id}:
  *   put:
  *     summary: Update an office
  *     tags: [Offices]
@@ -165,7 +165,7 @@ router.put('/:id', authMiddleware, roleCheck('super_admin', 'group_a_admin', 'gr
 
 /**
  * @swagger
- * /offices/{id}:
+ * /office/{id}:
  *   patch:
  *     summary: Disable an office
  *     tags: [Offices]

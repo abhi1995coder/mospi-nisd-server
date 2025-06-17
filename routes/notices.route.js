@@ -22,7 +22,7 @@ const { handleValidation } = require('../middlewares/validator');
 
 /**
  * @swagger
- * /notices:
+ * /notice:
  *   post:
  *     summary: Create a new notice
  *     tags: [Notices]
@@ -61,7 +61,7 @@ router.post(
 
 /**
  * @swagger
- * /notices:
+ * /notice:
  *   get:
  *     summary: Get all notices
  *     tags: [Notices]
@@ -77,7 +77,7 @@ router.get('/', authMiddleware, getAllNotices);
 
 /**
  * @swagger
- * /notices/{id}:
+ * /notice/{id}:
  *   get:
  *     summary: Get a single notice by ID
  *     tags: [Notices]
@@ -102,7 +102,7 @@ router.get('/:id', authMiddleware, getNoticeById);
 
 /**
  * @swagger
- * /notices/{id}:
+ * /notice/{id}:
  *   put:
  *     summary: Update a notice
  *     tags: [Notices]
@@ -147,7 +147,7 @@ router.put(
 
 /**
  * @swagger
- * /notices/{id}:
+ * /notice/{id}:
  *    patch:
  *     summary: Deactivate a notice
  *     tags: [Notices]

@@ -19,9 +19,9 @@ const internValidator={
 
         body('address').optional().isString().withMessage('Address should be string'),
 
-        body('aadhar_card_url').optional().isURL().withMessage('Invalid aadhar card url'),
+        //body('aadhar_card_url').optional().isURL().withMessage('Invalid aadhar card url'),
 
-        body('profile_photo_url').optional().isURL().withMessage('Invalid profile photo url'),
+        //body('profile_photo_url').optional().isURL().withMessage('Invalid profile photo url'),
     ]
 }
 module.exports=internValidator

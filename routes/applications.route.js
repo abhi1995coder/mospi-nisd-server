@@ -21,7 +21,7 @@ const { authMiddleware, roleCheck } = require('../middlewares/auth.middleware');
 
 /**
  * @swagger
- * /applications:
+ * /application:
  *   post:
  *     summary: Create a new application
  *     tags: [Applications]
@@ -52,7 +52,7 @@ router.post('/', authMiddleware, createApplication);
 
 /**
  * @swagger
- * /applications/{applicationId}/preferences:
+ * /application/{applicationId}/preferences:
  *   post:
  *     summary: Submit internship preferences
  *     tags: [Applications]
@@ -94,7 +94,7 @@ router.post('/:applicationId/preferences', authMiddleware, submitPreferences);
 
 /**
  * @swagger
- * /applications/{applicationId}/submit:
+ * /application/{applicationId}/submit:
  *   patch:
  *     summary: Submit the application for review
  *     tags: [Applications]
@@ -120,7 +120,7 @@ router.patch('/:applicationId/submit', authMiddleware, submitApplication);
 
 /**
  * @swagger
- * /applications/intern/{internId}:
+ * /application/intern/{internId}:
  *   get:
  *     summary: Get applications of an intern
  *     tags: [Applications]
@@ -142,7 +142,7 @@ router.get('/intern/:internId', authMiddleware, getApplicationByInternId);
 
 /**
  * @swagger
- * /applications/allocate/run:
+ * /application/allocate/run:
  *   post:
  *     summary: Run the internship allocation script (admin only)
  *     tags: [Applications]

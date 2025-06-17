@@ -12,7 +12,7 @@ const { authMiddleware, roleCheck } = require('../middlewares/auth.middleware');
 
 /**
  * @swagger
- * /admins/create:
+ * /admin/create:
  *   post:
  *     summary: Create a new admin (group A or B)
  *     tags: [Admins]
@@ -51,7 +51,7 @@ router.post('/create', authMiddleware, roleCheck('super_admin'), adminController
 
 /**
  * @swagger
- * /admins/{id}:
+ * /admin/{id}:
  *   put:
  *     summary: Edit an existing admin's details
  *     tags: [Admins]
@@ -93,7 +93,7 @@ router.put('/:id', authMiddleware, roleCheck('super_admin'), adminController.edi
 
 /**
  * @swagger
- * /admins/{id}/disable:
+ * /admin/{id}/disable:
  *   patch:
  *     summary: Disable an admin account
  *     tags: [Admins]
@@ -118,7 +118,7 @@ router.patch('/:id/disable', authMiddleware, roleCheck('super_admin'), adminCont
 
 /**
  * @swagger
- * /admins/list:
+ * /admin/list:
  *   get:
  *     summary: Get list of all group_a and group_b admins
  *     tags: [Admins]

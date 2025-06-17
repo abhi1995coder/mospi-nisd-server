@@ -14,7 +14,7 @@ const internController = require('../controllers/interns.controller');
 
 /**
  * @swagger
- * /interns:
+ * /intern:
  *   post:
  *     summary: Create or update intern profile (if already exists)
  *     tags: [Interns]
@@ -54,7 +54,7 @@ router.post('/', authMiddleware, roleCheck('intern'), internValidator.createOrUp
 
 /**
  * @swagger
- * /interns/{userId}:
+ * /intern/{userId}:
  *   get:
  *     summary: Get intern profile by user ID
  *     tags: [Interns]
@@ -79,7 +79,7 @@ router.get('/:userId', authMiddleware, roleCheck('intern', 'super_admin', 'group
 
 /**
  * @swagger
- * /interns/{userId}:
+ * /intern/{userId}:
  *   put:
  *     summary: Update intern profile by user ID
  *     tags: [Interns]
@@ -114,7 +114,7 @@ router.put('/:userId', authMiddleware, roleCheck('intern'), internValidator.crea
 
 /**
  * @swagger
- * /interns/{userId}/qualifications:
+ * /intern/{userId}/qualifications:
  *   get:
  *     summary: Get qualifications of an intern
  *     tags: [Interns]
@@ -139,7 +139,7 @@ router.get('/:userId/qualifications', authMiddleware, roleCheck('intern', 'super
 
 /**
  * @swagger
- * /interns/{userId}/qualifications:
+ * /intern/{userId}/qualifications:
  *   post:
  *     summary: Upsert (create or update) qualifications for an intern
  *     tags: [Interns]

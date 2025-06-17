@@ -20,7 +20,7 @@ const { authMiddleware, roleCheck } = require('../middlewares/auth.middleware');
 
 /**
  * @swagger
- * /sub-offices:
+ * /sub-office:
  *   post:
  *     summary: Create a new sub-office
  *     tags: [SubOffices]
@@ -52,7 +52,7 @@ router.post('/', authMiddleware, roleCheck('super_admin', 'group_b_admin'), crea
 
 /**
  * @swagger
- * /sub-offices:
+ * /sub-office:
  *   get:
  *     summary: Get all active sub-offices
  *     tags: [SubOffices]
@@ -68,7 +68,7 @@ router.get('/', authMiddleware, getAllSubOffices);
 
 /**
  * @swagger
- * /sub-offices/office/{id}:
+ * /sub-office/office/{id}:
  *   get:
  *     summary: Get sub-offices by office ID
  *     tags: [SubOffices]
@@ -91,7 +91,7 @@ router.get('/office/:id', authMiddleware, getSubOfficesByOfficeId);
 
 /**
  * @swagger
- * /sub-offices/{id}:
+ * /sub-office/{id}:
  *   put:
  *     summary: Update a sub-office
  *     tags: [SubOffices]
@@ -126,7 +126,7 @@ router.put('/:id', authMiddleware, roleCheck('super_admin', 'group_b_admin'), up
 
 /**
  * @swagger
- * /sub-offices/deactivate/{id}:
+ * /sub-office/deactivate/{id}:
  *   patch:
  *     summary: Deactivate a sub-office (soft delete)
  *     tags: [SubOffices]

@@ -87,7 +87,7 @@ router.post('/verify-otp', validateOTP, handleValidation, authController.verifyO
  *               email:
  *                 type: string
  *               password:
- *                 type:string
+ *                 type: string
  *     responses:
  *       200:
  *         description: OTP sent for login

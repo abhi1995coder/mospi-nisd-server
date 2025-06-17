@@ -12,7 +12,7 @@ const internshipController = require('../controllers/internships.controller');
 
 /**
  * @swagger
- * /internships:
+ * /internship:
  *   post:
  *     summary: Create a new internship
  *     tags: [Internships]
@@ -66,7 +66,7 @@ router.post('/', authMiddleware, roleCheck('super_admin', 'group_a_admin', 'grou
 
 /**
  * @swagger
- * /internships:
+ * /internship:
  *   get:
  *     summary: Get all internships (filterable by group_type)
  *     tags: [Internships]
@@ -87,7 +87,7 @@ router.get('/', internshipController.getAllInternship);
 
 /**
  * @swagger
- * /internships/{id}:
+ * /internship/{id}:
  *   get:
  *     summary: Get internship by ID
  *     tags: [Internships]
@@ -110,7 +110,7 @@ router.get('/:id', internshipController.getInternshipById);
 
 /**
  * @swagger
- * /internships/{id}:
+ * /internship/{id}:
  *   put:
  *     summary: Update an internship
  *     tags: [Internships]
@@ -157,7 +157,7 @@ router.put('/:id', authMiddleware, roleCheck('super_admin', 'group_a_admin', 'gr
 
 /**
  * @swagger
- * /internships/{id}/status:
+ * /internship/{id}/status:
  *   patch:
  *     summary: Toggle internship status between active and closed
  *     tags: [Internships]

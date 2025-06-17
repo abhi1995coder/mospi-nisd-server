@@ -9,51 +9,25 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    queryInterface.createTable('internships',{
+    queryInterface.createTable('notices',{
       id:{
         type:Sequelize.UUID,
         primaryKey:true,
-        defaultValue:Sequelize.UUIDV4
-      },
-      office_id:{
-        type:Sequelize.UUID,
         allowNull:false,
-        references:{
-          model:'offices',
-          key:'id'
-        },
-        onDelete:'CASCADE',
-        onUpdate:'CASCADE'
+        defaultValue:Sequelize.UUIDV4
       },
       title:{
         type:Sequelize.STRING,
         allowNull:false
       },
-      group_type:{
-        type:Sequelize.ENUM('A','B'),
+      content:{
+        type:Sequelize.TEXT,
         allowNull:false
       },
-      duration_months:{
-        type:Sequelize.INTEGER,
-        allowNull:false
-      },
-      start_date:{
-        type:Sequelize.DATEONLY,
-        allowNull:false
-      },
-      end_date:{
-        type:Sequelize.DATEONLY,
-        allowNull:false
-      },
-      available_slots:{
-        type:Sequelize.INTEGER,
+      is_active:{
+        type:Sequelize.BOOLEAN,
         allowNull:false,
-        defaultValue:0
-      },
-      status:{
-        type:Sequelize.ENUM('active','closed'),
-        allowNull:false,
-        defaultValue:'active'
+        defaultValue:true
       },
       createdAt:{
         type:Sequelize.DATE,
@@ -75,6 +49,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    queryInterface.dropTable('internships');
+    queryInterface.dropTable('notices')
   }
 };

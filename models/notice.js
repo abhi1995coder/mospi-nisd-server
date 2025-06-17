@@ -14,10 +14,38 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Notice.init({
-    name: DataTypes.STRING
+     id:{
+        type:DataTypes.UUID,
+        primaryKey:true,
+        defaultValue:DataTypes.UUIDV4
+      },
+      title:{
+        type:DataTypes.STRING,
+        allowNull:false
+      },
+      content:{
+        type:DataTypes.TEXT,
+        allowNull:false
+      },
+      is_active:{
+        type:DataTypes.BOOLEAN,
+        allowNull:false,
+        defaultValue:true
+      },
+      createdAt:{
+        type:DataTypes.DATE,
+        allowNull:false,
+        defaultValue:DataTypes.NOW
+      },
+      updatedAt:{
+        type:DataTypes.DATE,
+        allowNull:false,
+        defaultValue:DataTypes.NOW
+      }
   }, {
     sequelize,
     modelName: 'Notice',
+    tableName:'notices'
   });
   return Notice;
 };

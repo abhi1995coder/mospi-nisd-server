@@ -23,8 +23,8 @@ const officeRoutes=require('./routes/offices.route')
 const subOfficeRoutes=require('./routes/subOffices.route')
 const internshipRoutes=require('./routes/internships.route')
 /*const assignmentRoutes=require('./routes/assignments.route')
-const attendenceRoutes=require('./routes/attendences.route')
-const noticeRoutes=require('./routes/notices.route')*/
+const attendenceRoutes=require('./routes/attendences.route')*/
+const noticeRoutes=require('./routes/notices.route')
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 app.use('/api/auth',authRoutes)
@@ -37,8 +37,8 @@ app.use('/api/sub-office',subOfficeRoutes)
 app.use('/api/internship',internshipRoutes)
 
 /*app.use('/api/assignment',assignmentRoutes)
-app.use('/api/attendence',attendenceRoutes)
-app.use('/api/notice',noticeRoutes)*/
+app.use('/api/attendence',attendenceRoutes)*/
+app.use('/api/notice',noticeRoutes)
 
 app.get('/api/health',(req,res)=>{
     res.json({status:'UP',timestamp:new Date()})

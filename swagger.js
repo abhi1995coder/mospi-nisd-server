@@ -22,8 +22,15 @@ security: [{
       version: '1.0.0',
       description: 'API for internship portal',
     },
+    servers:[
+      {
+        url:'/api',
+        description:'Base path for all endpoints'
+      }
+
+    ]
   },
-  apis: ['./routes/*.js'], // update path if your route files are elsewhere
+  apis: ['./routes/*.js'],
 };
 
 const swaggerSpec = swaggerJsdoc(options);

@@ -165,7 +165,7 @@ router.get('/:id', authMiddleware, getOfficeById);
  *       500:
  *         description: Server error
  */
-router.put('/:id', authMiddleware, roleCheck('super_admin', 'group_a_admin', 'group_b_admin'), updateOffice);
+router.put('/:id', authMiddleware,handleValidation,validateOffice, roleCheck('super_admin', 'group_a_admin', 'group_b_admin'), updateOffice);
 
 /**
  * @swagger

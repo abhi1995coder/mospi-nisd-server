@@ -2,6 +2,15 @@ const { Office } = require('../models');
 
 // Create a new office (admin only)
 exports.createOffice = async (req, res) => {
+  const { office_type } = req.body;
+  const role = req.user.role;
+
+  if (role === 'group_a_admin' && office_type !== 'A') {
+    return res.status(403).json({ message: 'Group A admins can only create Group A offices.' });
+  }
+  if (role === 'group_b_admin' && office_type !== 'B') {
+    return res.status(403).json({ message: 'Group B admins can only create Group B offices.' });
+  }
   try {
     const office = await Office.create(req.body);
     return res.status(201).json({ message: 'Office created', office });
@@ -36,6 +45,15 @@ exports.getOfficeById = async (req, res) => {
 
 //  Update office (admin only)
 exports.updateOffice = async (req, res) => {
+  const { office_type } = req.body;
+  const role = req.user.role;
+
+  if (role === 'group_a_admin' && office_type && office_type !== 'A') {
+    return res.status(403).json({ message: 'Group A admins can only update to Group A offices.' });
+  }
+  if (role === 'group_b_admin' && office_type && office_type !== 'B') {
+    return res.status(403).json({ message: 'Group B admins can only update to Group B offices.' });
+  }
   try {
     const office = await Office.findByPk(req.params.id);
     if (!office) return res.status(404).json({ message: 'Office not found' });

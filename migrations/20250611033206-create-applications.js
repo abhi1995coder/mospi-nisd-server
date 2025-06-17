@@ -30,7 +30,7 @@ module.exports = {
             allowNull:false
          },
          application_status:{
-           type: Sequelize.ENUM('draft', 'submitted', 'under_review', 'accepted', 'rejected'),
+           type: Sequelize.ENUM('draft', 'submitted', 'under_review', 'accepted', 'rejected','incomplete'),
            defaultValue:'draft'
          },
          submission_date:{

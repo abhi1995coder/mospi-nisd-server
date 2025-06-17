@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull:false
          },
          application_status:{
-           type: DataTypes.ENUM('draft', 'submitted', 'under_review', 'accepted', 'rejected'),
+           type: DataTypes.ENUM('draft', 'submitted', 'under_review', 'accepted', 'rejected','incomplete'),
            defaultValue:'draft'
          },
          submission_date:{
@@ -71,6 +71,6 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Application',
     tableName:'applications'
   });
-  
+
   return Application;
 };

@@ -1,5 +1,6 @@
 const { Application, ApplicationPreference,Internship} = require('../models');
 const { checkEligibility } = require('../utility/eligibility');
+const requiredDocs = require('../config/requiredDocs');
 
 exports.createApplication = async (req, res) => {
   try {
@@ -96,14 +97,14 @@ exports.submitPreferences = async (req, res) => {
 exports.submitApplication = async (req, res) => {
   const { applicationId } = req.params;
   try {
-    // Load application + intern + their qualification
+    // 1) Load application with intern & qual
     const application = await Application.findByPk(applicationId, {
       include: {
         model: Intern,
-        as: 'a_to_in',             // adjust alias if yours differs
+        as: 'a_to_in',              // your alias
         include: {
           model: Qualification,
-          as: 'in_to_q'            // adjust alias if yours differs
+          as: 'in_to_q'            // your alias
         }
       }
     });
@@ -111,12 +112,33 @@ exports.submitApplication = async (req, res) => {
       return res.status(404).json({ message: 'Application not found' });
     }
 
-    // Only allow moving from draft → submitted once
+    // 2) Prevent double‐submit
     if (application.application_status === 'submitted') {
       return res.status(400).json({ message: 'Application already submitted' });
     }
 
-    // Check eligibility
+    // === SECTION A: Document completeness check ===
+    // Fetch all docs this intern has uploaded
+    const internId = application.intern_id;
+    const docs = await Document.findAll({ where: { intern_id: internId } });
+    const uploadedTypes = docs.map(d => d.document_type);
+
+    // Find which required ones are missing
+    const missing = requiredDocs.filter(dt => !uploadedTypes.includes(dt));
+    if (missing.length > 0) {
+      await application.update({
+        application_status: 'incomplete',
+        review_date: new Date(),
+        rejection_reason: `Missing documents: ${missing.join(', ')}`
+      });
+      return res.status(200).json({
+        message: 'Application incomplete—required documents missing',
+        missing
+      });
+    }
+    // === End Section A ===
+
+    // === Your existing eligibility logic ===
     const qual = application.a_to_in?.in_to_q;
     const eligible = checkEligibility(qual);
     if (!eligible) {
@@ -130,7 +152,7 @@ exports.submitApplication = async (req, res) => {
         .json({ message: 'Application rejected: eligibility criteria not met' });
     }
 
-    // Mark as submitted
+    // 3) All good → mark submitted
     await application.update({
       application_status: 'submitted',
       submission_date: new Date()
@@ -139,6 +161,7 @@ exports.submitApplication = async (req, res) => {
     return res
       .status(200)
       .json({ message: 'Application submitted successfully' });
+
   } catch (err) {
     console.error('Error in submitApplication:', err);
     return res.status(500).json({ message: 'Server error' });
@@ -158,5 +181,42 @@ exports.getApplicationByInternId = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+exports.updateApplicationStatus = async (req, res) => {
+  const { applicationId } = req.params;
+  const { status, rejection_reason } = req.body;
+
+  // Allowed manual statuses
+  const allowed = ['incomplete', 'under_review', 'rejected'];
+  if (!allowed.includes(status)) {
+    return res.status(400).json({ message: `Invalid status; must be one of ${allowed.join(', ')}` });
+  }
+  // If marking incomplete or rejected, require a reason
+  if ((status === 'incomplete' || status === 'rejected') && !rejection_reason) {
+    return res
+      .status(400)
+      .json({ message: 'rejection_reason is required when setting status to incomplete or rejected' });
+  }
+
+  try {
+    const application = await Application.findByPk(applicationId);
+    if (!application) {
+      return res.status(404).json({ message: 'Application not found' });
+    }
+
+    await application.update({
+      application_status: status,
+      rejection_reason: rejection_reason || null,
+      review_date: new Date()
+    });
+
+    return res.status(200).json({
+      message: `Application status set to '${status}'`,
+      application
+    });
+  } catch (err) {
+    console.error('Error in updateApplicationStatus:', err);
+    return res.status(500).json({ message: 'Server error' });
   }
 };

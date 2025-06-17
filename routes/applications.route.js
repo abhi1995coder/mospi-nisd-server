@@ -1,11 +1,15 @@
 const express = require('express');
 const router = express.Router();
 
+const { handleValidation } = require('../middlewares/validator');
+
+
 const {
   createApplication,
   getApplicationByInternId,
   submitPreferences,
-  submitApplication
+  submitApplication,
+  updateApplicationStatus
 } = require('../controllers/applications.controller');
 
 const { runAllocationAPI } = require('../controllers/allocation.controller');
@@ -155,5 +159,57 @@ router.get('/intern/:internId', authMiddleware, getApplicationByInternId);
  *         description: Allocation failed
  */
 router.post('/allocate/run', authMiddleware, roleCheck('super_admin'), runAllocationAPI);
+
+/**
+ * @swagger
+ * /api/application/{applicationId}/status:
+ *   patch:
+ *     summary: Manually update application status (admin only)
+ *     tags: [Applications]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: applicationId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the application
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - status
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [incomplete, under_review, rejected]
+ *               rejection_reason:
+ *                 type: string
+ *                 description: Required if status is 'incomplete' or 'rejected'
+ *     responses:
+ *       200:
+ *         description: Status updated successfully
+ *       400:
+ *         description: Invalid input
+ *       404:
+ *         description: Application not found
+ *       500:
+ *         description: Server error
+ */
+router.patch(
+  '/:applicationId/status',
+  authMiddleware,
+  roleCheck('super_admin','group_a_admin','group_b_admin'),
+  // Validate presence of status field
+  body('status')
+    .isIn(['incomplete','under_review','rejected'])
+    .withMessage('status must be one of incomplete, under_review, rejected'),
+  handleValidation,
+  updateApplicationStatus
+);
 
 module.exports = router;

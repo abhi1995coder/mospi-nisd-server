@@ -1,8 +1,19 @@
-const { SubOffice } = require('../models');
+const { SubOffice,Office} = require('../models');
 
 // Create sub-office
 exports.createSubOffice = async (req, res) => {
   try {
+  const{office_id}=req.body  
+  const office = await Office.findByPk(office_id);
+  if (!office) {
+    return res.status(404).json({ message: 'Office not found' });
+  }
+  
+  if (office.office_type !== 'B') {
+    return res.status(400).json({
+      message: 'Sub-offices can only be created under Group B offices'
+    });
+  }
     const subOffice = await SubOffice.create(req.body);
     res.status(201).json({ message: 'Sub-office created', subOffice });
   } catch (err) {

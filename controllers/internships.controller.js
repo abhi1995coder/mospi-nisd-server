@@ -15,6 +15,11 @@ exports.createInternship=async(req,res)=>{
         if(!office){
             return res.status(404).json({message:'Office not found'})
         }
+        if (office.office_type !== group_type) {
+           return res.status(400).json({
+           message: `Cannot create a Group ${group_type} internship under a Group ${office.office_type} office`
+            });
+        }
         const internship=await Internship.create({
             office_id,
             title,

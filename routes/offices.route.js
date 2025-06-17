@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+const { handleValidation } = require('../middlewares/validator');
+const { validateOffice } = require('../middlewares/offices.validator');
+
 const {
   createOffice,
   getAllOffices,
@@ -10,6 +13,7 @@ const {
 } = require('../controllers/offices.controller');
 
 const { authMiddleware, roleCheck } = require('../middlewares/auth.middleware');
+
 
 /**
  * @swagger
@@ -64,7 +68,7 @@ const { authMiddleware, roleCheck } = require('../middlewares/auth.middleware');
  *       500:
  *         description: Server error
  */
-router.post('/', authMiddleware, roleCheck('super_admin', 'group_a_admin', 'group_b_admin'), createOffice);
+router.post('/', authMiddleware,handleValidation,validateOffice, roleCheck('super_admin', 'group_a_admin', 'group_b_admin'), createOffice);
 
 /**
  * @swagger

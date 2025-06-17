@@ -7,7 +7,11 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
 
     static associate(models) {
-
+    User.belongsTo(models.Office,{
+      foreignKey:'office_id',
+      as:'u_to_o',
+      onDelete:'SETNULL'
+    })
 
     }
   }
@@ -61,6 +65,10 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.DATE,
       allowNull:false,
       defaultValue:DataTypes.NOW,
+    },
+    office_id:{
+    type: DataTypes.UUID,
+    allowNull: true,
     },
   }, {
     sequelize,

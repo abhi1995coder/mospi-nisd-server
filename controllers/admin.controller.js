@@ -1,8 +1,8 @@
-const{User}=require('../models')
+const{User,Office}=require('../models')
 const bcrypt=require('bcryptjs')
 const{v4:uuidv4}=require('uuid')
 exports.createAdmin=async(req,res)=>{
-    const{name,email,password,role}=req.body
+    const{name,email,password,role,office_id}=req.body
     if(!['group_a_admin','group_b_admin'].includes(role)){
         return res.status(400).json({message:"Invalid admin role"})
     }
@@ -18,7 +18,8 @@ exports.createAdmin=async(req,res)=>{
         email,
         password_hash:hashedPassword,
         role,
-        is_verified:true
+        is_verified:true,
+        office_id:office_id
       })
       res.status(201).json({message:`Admin created successfully as ${role}`,user_id:newAdmin.user_id})
 

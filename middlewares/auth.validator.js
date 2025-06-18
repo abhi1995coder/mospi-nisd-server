@@ -17,7 +17,7 @@ exports.validateEmail=[
 ]
 exports.validateResetPassword=[
        body('email').isEmail().withMessage('Valid email is recquired'),
-       body('password').isLength({min:6}).withMessage('Password should be greater than 6 digits'),
+       body('new_password').isLength({min:6}).withMessage('Password should be greater than 6 digits'),
        body('otp').isLength({min:6,max:6}).isNumeric().withMessage('OTP should be numeric and 6 digits')
 ]
 

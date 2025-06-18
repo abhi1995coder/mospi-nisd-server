@@ -70,7 +70,8 @@ exports.getAllAdmins=async(req,res)=>{
   try{
     const admins=await User.findAll({
       where:{
-        role:['group_a_admin','group_b_admin']
+        role:['group_a_admin','group_b_admin'],
+        is_active:true
       },
       attributes:['id','name','email','role','is_active','createdAt']
     })

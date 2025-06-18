@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+const{validateStatus}=require('../middlewares/applications.validator')
 const { handleValidation } = require('../middlewares/validator');
 
 
@@ -162,7 +163,7 @@ router.post('/allocate/run', authMiddleware, roleCheck('super_admin'), runAlloca
 
 /**
  * @swagger
- * /api/application/{applicationId}/status:
+ *   /application/{applicationId}/status:
  *   patch:
  *     summary: Manually update application status (admin only)
  *     tags: [Applications]
@@ -204,10 +205,8 @@ router.patch(
   '/:applicationId/status',
   authMiddleware,
   roleCheck('super_admin','group_a_admin','group_b_admin'),
-  // Validate presence of status field
-  body('status')
-    .isIn(['incomplete','under_review','rejected'])
-    .withMessage('status must be one of incomplete, under_review, rejected'),
+  
+  validateStatus,
   handleValidation,
   updateApplicationStatus
 );

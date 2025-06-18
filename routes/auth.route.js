@@ -5,6 +5,7 @@ const {
   validateRegister,
   validateOTP,
   validateLogin,
+  validateEmail,
   validateResetPassword
 } = require('../middlewares/auth.validator');
 const authController = require('../controllers/auth.controller');
@@ -64,7 +65,7 @@ router.post('/register', validateRegister, handleValidation, authController.regi
  *                 type: string
  *     responses:
  *       200:
- *         description: OTP verified
+ *         description: OTP verified and token sent
  */
 router.post('/verify-otp', validateOTP, handleValidation, authController.verifyOtp);
 
@@ -141,7 +142,7 @@ router.post('/login', validateOTP, handleValidation, authController.login);
  *       200:
  *         description: OTP sent to email
  */
-router.post('/forget-password', validateOTP, handleValidation, authController.requestPasswordReset);
+router.post('/forget-password', validateEmail, handleValidation, authController.requestPasswordReset);
 
 /**
  * @swagger

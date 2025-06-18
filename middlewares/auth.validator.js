@@ -12,6 +12,9 @@ exports.validateLogin=[
      body('email').isEmail().withMessage('Valid email is recquired'),
      body('password').notEmpty().withMessage('Password is recquired')
 ]
+exports.validateEmail=[
+    body('email').isEmail().withMessage('Valid email is recquired')
+]
 exports.validateResetPassword=[
        body('email').isEmail().withMessage('Valid email is recquired'),
        body('password').isLength({min:6}).withMessage('Password should be greater than 6 digits'),

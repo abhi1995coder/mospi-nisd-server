@@ -22,6 +22,7 @@ const applicationRoutes=require('./routes/applications.route')
 const officeRoutes=require('./routes/offices.route')
 const subOfficeRoutes=require('./routes/subOffices.route')
 const internshipRoutes=require('./routes/internships.route')
+const onboardingRoutes=require('./routes/onboardings.route')
 /*const assignmentRoutes=require('./routes/assignments.route')
 const attendenceRoutes=require('./routes/attendences.route')*/
 const noticeRoutes=require('./routes/notices.route')
@@ -35,7 +36,7 @@ app.use('/api/application',applicationRoutes)
 app.use('/api/office',officeRoutes)
 app.use('/api/sub-office',subOfficeRoutes)
 app.use('/api/internship',internshipRoutes)
-
+app.use('/api/onboarding',onboardingRoutes)
 /*app.use('/api/assignment',assignmentRoutes)
 app.use('/api/attendence',attendenceRoutes)*/
 app.use('/api/notice',noticeRoutes)

@@ -43,8 +43,8 @@ exports.getAllInternship = async (req, res) => {
 
     const whereClause = {};
     if (group_type) {
-      if (!['A', 'B'].includes(group_type)) {
-        return res.status(400).json({ message: 'Invalid group_type. Use A or B.' });
+      if (!['group_a_internship', 'group_b_internship'].includes(group_type)) {
+        return res.status(400).json({ message: 'Invalid group_type.' });
       }
       whereClause.group_type = group_type;
     }

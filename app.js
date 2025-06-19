@@ -14,6 +14,9 @@ app.use(cors({
 }))
 app.use(helmet())
 
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 const authRoutes=require('./routes/auth.route')
 const adminRoutes=require('./routes/admins.route')
 const internRoutes=require('./routes/interns.route')

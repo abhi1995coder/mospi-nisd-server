@@ -81,15 +81,7 @@ router.post('/', authMiddleware,handleValidation,validateOffice, roleCheck('supe
  *     responses:
  *       200:
  *         description: List of offices
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 offices:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Office'
+ *        
  *       500:
  *         description: Server error
  */

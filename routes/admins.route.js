@@ -127,31 +127,8 @@ router.patch('/:id/disable', authMiddleware, roleCheck('super_admin'), adminCont
  *     responses:
  *       200:
  *         description: List of admins
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 admins:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: string
- *                       name:
- *                         type: string
- *                       email:
- *                         type: string
- *                       role:
- *                         type: string
- *                       is_active:
- *                         type: boolean
- *                       createdAt:
- *                         type: string
- *                         format: date-time
  *       500:
- *         description: Failed to fetch admins
+ *         description: Internal server error
  */
 router.get('/list', authMiddleware, roleCheck('super_admin'), adminController.getAllAdmins);
 

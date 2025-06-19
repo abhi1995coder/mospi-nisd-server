@@ -78,6 +78,6 @@ exports.getAllAdmins=async(req,res)=>{
     res.status(200).json({admins})
   }catch(err){
     console.log(err)
-    res.status(500).json({message:'Failed to fetch admins'})
+    res.status(500).json({message:'Internal server error'})
   }
 }

@@ -7,7 +7,8 @@ const { body } = require('express-validator');
 
 const upload = multer({ storage: multer.memoryStorage() });
 const {
-  getOrCreateOnboarding,
+  createOnboarding,
+  getOnboarding,
   getOfferLetter,
   respondOffer,
   uploadJoiningReport,
@@ -29,8 +30,33 @@ const { handleValidation } = require('../middlewares/validator');
 /**
  * @swagger
  * /api/onboarding/{applicationId}:
+ *   post:
+ *     summary: create an onboarding record
+ *     tags: [Onboarding]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: applicationId
+ *         schema:
+ *           type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Onboarding details
+ */
+router.post(
+  '/:applicationId',
+  authMiddleware,
+  roleCheck('intern','super_admin','group_a_admin','group_b_admin'),
+  createOnboarding
+);
+
+/**
+ * @swagger
+ * /api/onboarding/{applicationId}:
  *   get:
- *     summary: Get or create an onboarding record
+ *     summary: Get an onboarding record
  *     tags: [Onboarding]
  *     security:
  *       - bearerAuth: []
@@ -48,7 +74,7 @@ router.get(
   '/:applicationId',
   authMiddleware,
   roleCheck('intern','super_admin','group_a_admin','group_b_admin'),
-  getOrCreateOnboarding
+  getOnboarding
 );
 
 /**

@@ -4,32 +4,42 @@ const fs = require('fs');
 const path = require('path');
 const { OnboardingDetail, Application } = require('../models');
 
-/**
- * GET or CREATE an onboarding record for an application
- */
-exports.getOrCreateOnboarding = async (req, res) => {
+
+
+
+exports.getOnboarding = async (req, res) => {
   const { applicationId } = req.params;
-  try {
-    // ensure the application exists
-    const app = await Application.findByPk(applicationId);
-    if (!app) {
-      return res.status(404).json({ message: 'Application not found' });
-    }
-
-    // find or create the onboarding row
-    let onboarding = await OnboardingDetail.findOne({
-      where: { application_id: applicationId }
-    });
-    if (!onboarding) {
-      onboarding = await OnboardingDetail.create({ application_id: applicationId });
-    }
-
-    return res.json({ onboarding });
-  } catch (err) {
-    console.error('getOrCreateOnboarding error:', err);
-    return res.status(500).json({ message: 'Server error' });
+  const onboarding = await OnboardingDetail.findOne({
+    where: { application_id: applicationId }
+  });
+  if (!onboarding) {
+    return res.status(404).json({ message: 'Onboarding record not found' });
   }
+  return res.json({ onboarding });
 };
+
+
+exports.createOnboarding = async (req, res) => {
+  const { applicationId } = req.params;
+  // ensure the application exists
+  const app = await Application.findByPk(applicationId);
+  if (!app) {
+    return res.status(404).json({ message: 'Application not found' });
+  }
+  // avoid duplicate
+  let onboarding = await OnboardingDetail.findOne({
+    where: { application_id: applicationId }
+  });
+  if (onboarding) {
+    return res
+      .status(200)
+      .json({ message: 'Onboarding already exists', onboarding });
+  }
+  // create new
+  onboarding = await OnboardingDetail.create({ application_id: applicationId });
+  return res.status(201).json({ message: 'Onboarding created', onboarding });
+};
+
 
 /**
  * GET the offer letter URL

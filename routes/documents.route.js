@@ -1,14 +1,26 @@
+
+
 const express = require('express');
 const router = express.Router();
-const { uploadDocument, getDocumentsByIntern,verifyDocument } = require('../controllers/documents.controller');
+const {
+  uploadDocument,
+  getDocumentsByIntern,
+  getDocumentsByInternId,    // new import
+  verifyDocument
+} = require('../controllers/documents.controller');
 const { authMiddleware, roleCheck } = require('../middlewares/auth.middleware');
 const { uploadSingleDocument } = require('../middlewares/documents.validator');
 
-
+/**
+ * @swagger
+ * tags:
+ *   name: Documents
+ *   description: Document upload and verification
+ */
 
 /**
  * @swagger
- * /document:
+ * /api/document:
  *   post:
  *     summary: Upload a document for the intern
  *     tags: [Documents]
@@ -29,7 +41,6 @@ const { uploadSingleDocument } = require('../middlewares/documents.validator');
  *                 format: binary
  *               document_type:
  *                 type: string
- *                 description: Type of the document
  *                 enum:
  *                   - aadhar_card
  *                   - photo
@@ -47,52 +58,68 @@ const { uploadSingleDocument } = require('../middlewares/documents.validator');
  *       500:
  *         description: Server error
  */
-
-router.post('/', authMiddleware, roleCheck('intern'), uploadSingleDocument, uploadDocument);
-
+router.post(
+  '/',
+  authMiddleware,
+  roleCheck('intern'),
+  uploadSingleDocument,
+  uploadDocument
+);
 
 /**
  * @swagger
- * /document:
+ * /api/document:
  *   get:
- *     summary: Get all documents uploaded by the intern
+ *     summary: Get all documents uploaded by the logged-in intern
  *     tags: [Documents]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of uploaded documents
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 documents:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       id:
- *                         type: string
- *                       document_type:
- *                         type: string
- *                       document_url:
- *                         type: string
- *                       verification_status:
- *                         type: string
- *                         enum: [pending, verified, rejected]
- *                       createdAt:
- *                         type: string
- *                         format: date-time
  *       500:
  *         description: Server error
  */
-
-router.get('/',authMiddleware,roleCheck('intern'),getDocumentsByIntern);
+router.get(
+  '/',
+  authMiddleware,
+  roleCheck('intern'),
+  getDocumentsByIntern
+);
 
 /**
  * @swagger
- * /document/{id}/verify:
+ * /api/document/intern/{internId}:
+ *   get:
+ *     summary: Get all documents for a specific intern (admin only)
+ *     tags: [Documents]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: internId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Intern user ID
+ *     responses:
+ *       200:
+ *         description: List of documents for that intern
+ *       404:
+ *         description: Intern not found
+ *       500:
+ *         description: Server error
+ */
+router.get(
+  '/intern/:internId',
+  authMiddleware,
+  roleCheck('super_admin', 'group_a_admin', 'group_b_admin'),
+  getDocumentsByInternId
+);
+
+/**
+ * @swagger
+ * /api/document/{id}/verify:
  *   patch:
  *     summary: Verify or reject a submitted document
  *     tags: [Documents]
@@ -127,8 +154,11 @@ router.get('/',authMiddleware,roleCheck('intern'),getDocumentsByIntern);
  *       500:
  *         description: Server error
  */
-
-router.patch('/:id/verify', authMiddleware, roleCheck('super_admin', 'group_a_admin', 'group_b_admin'), verifyDocument);
-
+router.patch(
+  '/:id/verify',
+  authMiddleware,
+  roleCheck('super_admin', 'group_a_admin', 'group_b_admin'),
+  verifyDocument
+);
 
 module.exports = router;

@@ -30,7 +30,7 @@ module.exports = {
         allowNull:false
       },
       group_type:{
-        type:Sequelize.ENUM('A','B'),
+        type:Sequelize.ENUM('group_a_internship','group_b_internship'),
         allowNull:false
       },
       duration_months:{

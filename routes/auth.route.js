@@ -40,6 +40,10 @@ const authController = require('../controllers/auth.controller');
  *     responses:
  *       201:
  *         description: Registered successfullly,OTP sent
+ *       400:
+ *         description: Email already exists
+ *       500:
+ *         description: Internal server error
  */
 router.post('/register', validateRegister, handleValidation, authController.register);
 
@@ -66,6 +70,10 @@ router.post('/register', validateRegister, handleValidation, authController.regi
  *     responses:
  *       200:
  *         description: OTP verified and token sent
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
  */
 router.post('/verify-otp', validateOTP, handleValidation, authController.verifyOtp);
 
@@ -92,6 +100,14 @@ router.post('/verify-otp', validateOTP, handleValidation, authController.verifyO
  *     responses:
  *       200:
  *         description: OTP sent for login
+ *       404:
+ *         description: User not found
+ *       403:
+ *         description: Account not verified/Account disabled
+ *       400:
+ *         description: Invalid password
+ *       500:
+ *         description: Internal server error
  */
 router.post('/request-login-otp', validateLogin, handleValidation, authController.requestOtpLogin);
 
@@ -118,6 +134,12 @@ router.post('/request-login-otp', validateLogin, handleValidation, authControlle
  *     responses:
  *       200:
  *         description: Logged in successfully
+ *       404:
+ *         description: User not found
+ *       400:
+ *          description: Invalid or expired otp
+ *       500:
+ *          description: Internal server error
  */
 router.post('/login', validateOTP, handleValidation, authController.login);
 
@@ -141,6 +163,10 @@ router.post('/login', validateOTP, handleValidation, authController.login);
  *     responses:
  *       200:
  *         description: OTP sent to email
+ *       500:
+ *         description: Internal server error
+ *       404:
+ *          description: Invalid credentials
  */
 router.post('/forget-password', validateEmail, handleValidation, authController.requestPasswordReset);
 
@@ -170,6 +196,10 @@ router.post('/forget-password', validateEmail, handleValidation, authController.
  *     responses:
  *       200:
  *         description: Password reset successfully
+ *       500:
+ *         description: Internal server error
+ *       400:
+ *         description: Invalid/Expired OTP
  */
 router.post('/reset-password', validateResetPassword, handleValidation, authController.resetPassword);
 

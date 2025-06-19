@@ -75,7 +75,7 @@ router.post('/', authMiddleware, roleCheck('super_admin', 'group_a_admin', 'grou
  *         in: query
  *         schema:
  *           type: string
- *           enum: [A, B]
+ *           enum: [group_a_internship, group_b_internship]
  *         description: Filter internships by group type
  *     responses:
  *       200:

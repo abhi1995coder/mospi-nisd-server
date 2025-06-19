@@ -29,6 +29,8 @@ const internController = require('../controllers/interns.controller');
  *             properties:
  *               full_name:
  *                 type: string
+ *               father_name:
+ *                 type: string
  *               date_of_birth:
  *                 type: string
  *                 format: date
@@ -66,7 +68,7 @@ router.post('/', authMiddleware, roleCheck('intern'), internValidator.createOrUp
  *         schema:
  *           type: string
  *         required: true
- *         description: User ID
+ *         description: User ID of intern
  *     responses:
  *       200:
  *         description: Intern profile
@@ -98,9 +100,24 @@ router.get('/:userId', authMiddleware, roleCheck('intern', 'super_admin', 'group
  *           schema:
  *             type: object
  *             properties:
+ *               full_name:
+ *                 type: string
+ *               father_name:
+ *                 type: string
+ *               date_of_birth:
+ *                 type: string
+ *                 format: date
+ *               gender:
+ *                 type: string
  *               phone:
  *                 type: string
  *               address:
+ *                 type: string
+ *               state:
+ *                 type: string
+ *               district:
+ *                 type: string
+ *               pincode:
  *                 type: string
  *     responses:
  *       200:
@@ -158,15 +175,7 @@ router.get('/:userId/qualifications', authMiddleware, roleCheck('intern', 'super
  *         application/json:
  *           schema:
  *             type: object
- *             properties:
- *               qualification_level:
- *                 type: string
- *               institution:
- *                 type: string
- *               passing_year:
- *                 type: string
- *               marks:
- *                 type: string
+ *             
  *     responses:
  *       200:
  *         description: Qualification created or updated

@@ -32,6 +32,33 @@ module.exports = {
         allowNull:false
 
       },
+      term_end_exam:{
+        type:Sequelize.BOOLEAN,
+        allowNull:false,
+        defaultValue:false
+      },
+      graduation_max_marks:{
+        type:Sequelize.INTEGER
+      },
+      graduation_obtained_marks:{
+        type:Sequelize.INTEGER
+      },
+      current_academic_level:{
+        type:Sequelize.STRING
+      },
+      is_research_student:{
+        type:Sequelize.BOOLEAN
+      },
+      highest_education_level:{
+        type:Sequelize.STRING
+      },
+      graduation_complete_date:{
+        type:Sequelize.DATEONLY
+      },
+      post_graduation_complete_date:{
+        type:Sequelize.DATEONLY
+      },
+
       programme_name:{
         type:Sequelize.STRING,
         allowNull:false

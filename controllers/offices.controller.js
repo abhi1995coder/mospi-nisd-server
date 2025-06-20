@@ -5,10 +5,10 @@ exports.createOffice = async (req, res) => {
   const { office_type } = req.body;
   const role = req.user.role;
 
-  if (role === 'group_a_admin' && office_type !== 'A') {
+  if (role === 'group_a_admin' && office_type !== 'group_a') {
     return res.status(403).json({ message: 'Group A admins can only create Group A offices.' });
   }
-  if (role === 'group_b_admin' && office_type !== 'B') {
+  if (role === 'group_b_admin' && office_type !== 'group_b') {
     return res.status(403).json({ message: 'Group B admins can only create Group B offices.' });
   }
   try {
@@ -48,10 +48,10 @@ exports.updateOffice = async (req, res) => {
   const { office_type } = req.body;
   const role = req.user.role;
 
-  if (role === 'group_a_admin' && office_type && office_type !== 'A') {
+  if (role === 'group_a_admin' && office_type && office_type !== 'group_a') {
     return res.status(403).json({ message: 'Group A admins can only update to Group A offices.' });
   }
-  if (role === 'group_b_admin' && office_type && office_type !== 'B') {
+  if (role === 'group_b_admin' && office_type && office_type !== 'group_b') {
     return res.status(403).json({ message: 'Group B admins can only update to Group B offices.' });
   }
   try {

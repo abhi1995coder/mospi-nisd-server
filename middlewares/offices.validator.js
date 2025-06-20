@@ -5,8 +5,8 @@ exports.validateOffice = [
   body('office_name')
     .trim().notEmpty().withMessage('office_name is required'),
   body('office_type')
-    .isIn(['A','B'])
-    .withMessage('office_type must be "A" or "B"'),
+    .isIn(['group_a','group_b'])
+    .withMessage('office_type must be "group_a" or "group_b"'),
   body('city').notEmpty(),
   body('state').notEmpty(),
   body('address').notEmpty(),

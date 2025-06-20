@@ -68,7 +68,7 @@ const { authMiddleware, roleCheck } = require('../middlewares/auth.middleware');
  *       500:
  *         description: Server error
  */
-router.post('/', authMiddleware,handleValidation,validateOffice, roleCheck('super_admin', 'group_a_admin', 'group_b_admin'), createOffice);
+router.post('/', authMiddleware,validateOffice,handleValidation, roleCheck('super_admin', 'group_a_admin', 'group_b_admin'), createOffice);
 
 /**
  * @swagger

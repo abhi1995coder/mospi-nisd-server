@@ -17,6 +17,17 @@ module.exports = {
           defaultValue:Sequelize.UUIDV4
 
         },
+        user_id:{
+          type:Sequelize.UUID,
+          allowNull:false,
+          references:{
+            model:'users',
+            key:'id'
+          },
+          onDelete:'CASCADE',
+          
+        },
+
         office_name:{
           type:Sequelize.STRING,
           allowNull:false

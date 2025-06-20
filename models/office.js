@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:'office_id',
         as:'o_to_i'
       })
+      Office.belongsTo(models.User,{
+        foreignKey:'user_id',
+        as:'o_to_u'
+      })
     }
   }
   Office.init({
@@ -29,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
           allowNull:false,
           defaultValue:DataTypes.UUIDV4
 
+        },
+        user_id:{
+         type:DataTypes.UUID,
+         allowNull:true
         },
         office_name:{
           type:DataTypes.STRING,

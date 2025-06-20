@@ -7,7 +7,10 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
 
     static associate(models) {
-
+      User.hasMany(models.Intern,{
+        foreignKey:'user_id',
+        as:'u_to_o'
+      })
 
     }
   }

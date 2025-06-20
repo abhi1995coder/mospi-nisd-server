@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
           allowNull:false
         },
         office_type:{
-          type:DataTypes.STRING,
+          type:DataTypes.ENUM('group_a','group_b'),
           allowNull:false
         },
         city:{

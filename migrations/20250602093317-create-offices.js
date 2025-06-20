@@ -22,7 +22,7 @@ module.exports = {
           allowNull:false
         },
         office_type:{
-          type:Sequelize.STRING,
+          type:Sequelize.ENUM('group_a','group_b'),
           allowNull:false
         },
         city:{

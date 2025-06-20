@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     group_type:{
-     type:DataTypes.ENUM('group_a_internship','group_b_internship'),
+     type:DataTypes.ENUM('group_a','group_b'),
      allowNull:false
     },
     duration_months: {

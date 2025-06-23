@@ -8,8 +8,8 @@ const internController = require('../controllers/interns.controller');
 /**
  * @swagger
  * tags:
- *   name: Interns
- *   description: Intern profile and qualification management
+ *   - name: Interns
+ *     description: Intern profile and qualification management
  */
 
 /**
@@ -17,7 +17,8 @@ const internController = require('../controllers/interns.controller');
  * /intern:
  *   post:
  *     summary: Create or update intern profile (if already exists)
- *     tags: [Interns]
+ *     tags:
+ *       - Interns
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -34,22 +35,20 @@ const internController = require('../controllers/interns.controller');
  *               date_of_birth:
  *                 type: string
  *                 format: date
- *               gender:
+ *               contact_number:
  *                 type: string
- *               phone:
+ *               alt_contact_number:
  *                 type: string
  *               address:
  *                 type: string
- *               state:
+ *               nationality:
  *                 type: string
- *               district:
- *                 type: string
- *               pincode:
+ *               university:
  *                 type: string
  *     responses:
- *       200:
+ *       '200':
  *         description: Profile created or updated
- *       500:
+ *       '500':
  *         description: Server error
  */
 router.post('/', authMiddleware, roleCheck('intern'), internValidator.createOrUpdateProfile, handleValidation, internController.createIntern);

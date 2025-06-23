@@ -1,14 +1,18 @@
 
-
-const fs = require('fs');
+const { v4: uuid } = require('uuid');
+const { writeFile } = require('fs').promises;
 const path = require('path');
-const { Document, Intern } = require('../models');
-
-// Ensure the uploads directory exists
 const UPLOAD_DIR = path.join(__dirname, '..', 'uploads');
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR);
-}
+const fs = require('fs');
+const { Document, Intern } = require('../models');
+const { PDFDocument }= require('pdf-lib');
+const sharp = require('sharp');
+
+
+
+
+
+// 1) Structural parse (example for PDF)
 
 /**
  * POST /api/document
@@ -16,9 +20,32 @@ if (!fs.existsSync(UPLOAD_DIR)) {
  */
 exports.uploadDocument = async (req, res) => {
   try {
+  await PDFDocument.load(file.buffer);
+} catch {
+  return res.status(400).json({ message: 'Malformed PDF' });
+}
+
+// 2) (Optional) Antivirus scan...
+// await clam.scanBuffer(file.buffer,...);
+
+// 3) Safe write
+const ext = file.mimetype === 'application/pdf' ? 'pdf' : 'jpg';
+const filename = `${uuid()}.${ext}`;
+await writeFile(path.join(UPLOAD_DIR, filename), file.buffer);
+
+// 4) DB record
+const document = await Document.create({
+  intern_id: intern.id,
+  document_type,
+  document_url: `/uploads/${filename}`,
+  verification_status: 'pending'
+});
+
+  try {
     const user_id = req.user.user_id;
     const { document_type } = req.body;
     const file = req.file;
+    
     if (!file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }

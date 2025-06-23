@@ -15,7 +15,12 @@ app.use(cors({
 app.use(helmet())
 
 const path = require('path');
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+  setHeaders(res) {
+    res.set('X-Content-Type-Options','nosniff');
+    res.set('Content-Security-Policy', "default-src 'none';");
+  }
+}));
 
 const authRoutes=require('./routes/auth.route')
 const adminRoutes=require('./routes/admins.route')

@@ -1,4 +1,4 @@
-// config/requiredDocs.js
+
 module.exports = [
   'marksheet_12th',
   'marksheet_graduation',

@@ -11,13 +11,33 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+       Attendence.belongsTo(models.Intern, {
+        foreignKey: 'intern_id',
+        as: 'att_to_intern',
+        onDelete: 'CASCADE'
+      });
     }
   }
   Attendence.init({
-    name: DataTypes.STRING
+     id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
+    intern_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
+    },
+    check_in: DataTypes.DATE,
+    check_out: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Attendence',
+    tableName:'attendences'
   });
   return Attendence;
 };

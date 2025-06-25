@@ -48,7 +48,7 @@ exports.createInternship = async (req, res) => {
       start_date,
       end_date,
       available_slots,
-      created_by: req.user.id    // if you have that column
+      //created_by: req.user.id    // if you have that column
     });
 
     return res.status(201).json({ message: 'Internship created', internship });

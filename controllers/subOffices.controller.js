@@ -9,7 +9,7 @@ exports.createSubOffice = async (req, res) => {
     return res.status(404).json({ message: 'Office not found' });
   }
   
-  if (office.office_type !== 'B') {
+  if (office.office_type !== 'group_b') {
     return res.status(400).json({
       message: 'Sub-offices can only be created under Group B offices'
     });

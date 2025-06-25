@@ -1,7 +1,7 @@
 const{Intern,Qualification}=require('../models')
 exports.createIntern=async(req,res)=>{
     try{
-      const user_id=req.user.user_id
+      const user_id=req.user.id
 
       const existingIntern=await Intern.findOne({where:{user_id}})
       if(existingIntern){

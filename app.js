@@ -2,15 +2,16 @@ require('dotenv').config()
 const express=require('express')
 const  cors=require('cors')
 const{sequelize}=require('./models')
+const swaggerUi = require("swagger-ui-express"); 
 const helmet=require('helmet')
 const app=express()
-const { swaggerUi, swaggerSpec } = require('./swagger');
+const  swaggerSpec  = require('./swagger');
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cors({
     origin: process.env.FRONTEND_URL,
-    credentials: true
+    credentials: false
 }))
 app.use(helmet())
 
@@ -36,7 +37,7 @@ const attendenceRoutes=require('./routes/attendences.route')
 const noticeRoutes=require('./routes/notices.route')
 const analyticsRoutes = require('./routes/analytics.route')
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/auth',authRoutes)
 app.use('/api/admin',adminRoutes)
 app.use('/api/intern',internRoutes)

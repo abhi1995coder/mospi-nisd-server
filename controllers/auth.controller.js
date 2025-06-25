@@ -114,7 +114,7 @@ exports.login = async (req, res) => {
         role: user.role,
         email: user.email,
       },
-      process.env.JWT_SECRET,{ expiresIn: '1d' }
+      process.env.JWT_SECRET,{ expiresIn:process.env.JWT_EXPIRES_IN }
     );
 
     return res.status(200).json({

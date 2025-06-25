@@ -21,7 +21,7 @@ exports.createAdmin=async(req,res)=>{
         is_verified:true,
 
       })
-      res.status(201).json({message:`Admin created successfully as ${role}`,user_id:newAdmin.user_id})
+      res.status(201).json({message:`Admin created successfully as ${role}`,id:newAdmin.id})
 
     }catch(err){
         console.log('Admin creation failed',err)

@@ -11,7 +11,7 @@ exports.sendMail=async(to,message)=>{
    const mailOptions={
     from:`"MOSPI Internship"=<${process.env.EMAIL_USER}>`,
     to,
-    subject:'MOSPI Internship OTP Verification',
+    subject:'MOSPI Internship Notification',
     text:message
    }
    try{

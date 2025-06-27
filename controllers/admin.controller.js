@@ -1,8 +1,10 @@
 const{User}=require('../models')
 const bcrypt=require('bcryptjs')
 const{v4:uuidv4}=require('uuid')
+const{sendMail}=require('../utility/mailer')
 exports.createAdmin=async(req,res)=>{
-    const{name,email,password,role}=req.body
+    const{name,email,role}=req.body
+    const password="mospi@1234"
     if(!['group_a_admin','group_b_admin'].includes(role)){
         return res.status(400).json({message:"Invalid admin role"})
     }
@@ -21,6 +23,8 @@ exports.createAdmin=async(req,res)=>{
         is_verified:true,
 
       })
+      const message=`You have been created a admin in nisd portal .Your default password is ${password}`
+      await sendMail(email,message)
       res.status(201).json({message:`Admin created successfully as ${role}`,id:newAdmin.id})
 
     }catch(err){
@@ -30,7 +34,7 @@ exports.createAdmin=async(req,res)=>{
 }
 exports.editAdmin=async(req,res)=>{
   const{id}=req.params
-  const{name,email,role,password}=req.body
+  const{name,email,role}=req.body
   if(role && !['group_a_admin','group_b_admin'].includes(role)){
     return res.status(400).json({message:'invalid role'})
   }
@@ -40,9 +44,7 @@ exports.editAdmin=async(req,res)=>{
       return res.status(404).json({message:'Admin not found'})
     }
     const updateData={name,email,role}
-    if(password){
-      updateData.password_hash=await bcrypt.hash(password,10)
-    }
+    
     await user.update(updateData)
     res.status(200).json({message:'Admin updated successfully'})
 

@@ -1,7 +1,7 @@
 const bcrypt=require('bcryptjs')
 const jwt=require('jsonwebtoken')
 const{User}=require('../models')
-const{sendOtp}=require('../utility/mailer')
+const{sendMail}=require('../utility/mailer')
 
 const generateOTP=()=>Math.floor(100000+Math.random()*900000).toString()
 
@@ -20,8 +20,9 @@ exports.register=async(req,res)=>{
         otp_code:otp,
         otp_expires_at:expiresAt,
         role:'intern',
-        })
-        await sendOtp(email,otp)
+      })
+        const message=`Your OTP is ${otp}. It will expire in 10 minutes. `
+        await sendMail(email,message)
         res.status(201).json({message:'Registered successfullly,OTP sent',status:'201'})
    }catch(err){
       console.log(err)
@@ -41,7 +42,7 @@ exports.verifyOtp=async(req,res)=>{
 
        await user.update({is_verified:true,otp_code:null,otp_expires_at:null})
 
-       const token=jwt.sign({id:user.id,role:user.role,email:user.email},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRES_IN})
+       const token=jwt.sign({id:user.id,role:user.role,email:user.email,name:user.name},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRES_IN})
        res.status(200).json({message:'OTP verified',token,status:'200'})
    }catch(err){
     console.log(err)
@@ -75,7 +76,8 @@ exports.requestOtpLogin = async (req, res) => {
       otp_expires_at: expiresAt,
     });
 
-    await sendOtp(email, otp);
+    const message=`Your OTP is ${otp}. It will expire in 10 minutes. `
+    await sendMail(email,message)
 
     return res.status(200).json({
       message: 'OTP sent for login',
@@ -115,6 +117,7 @@ exports.login = async (req, res) => {
         id: user.id,
         role: user.role,
         email: user.email,
+        name:user.name
       },
       process.env.JWT_SECRET,{ expiresIn:process.env.JWT_EXPIRES_IN }
     );
@@ -138,7 +141,8 @@ exports.requestPasswordReset=async(req,res)=>{
     if(!user) return res.status(404).json({message:'Invalid credentials',status:'404'})
 
     await user.update({otp_code:otp,otp_expires_at:expiresAt})
-    await sendOtp(email,otp)
+    const message=`Your OTP is ${otp}. It will expire in 10 minutes. `
+    await sendMail(email,message)
 
     res.status(200).json({message:'OTP sent for password reset',status:'200'})
    }catch(err){

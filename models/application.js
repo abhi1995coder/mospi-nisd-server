@@ -17,10 +17,7 @@ module.exports = (sequelize, DataTypes) => {
        as:'a_to_in',
       onDelete:'CASCADE'
       })
-      Application.hasMany(models.ApplicationPreference,{
-        foreignKey:'application_id',
-        as:'a_to_ap'
-      })
+      
     }
   }
   Application.init({

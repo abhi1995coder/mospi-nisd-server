@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull:false
       },
       year_of_study:{
-         type:DataTypes.INTEGER
+         type:DataTypes.STRING
       },
       has_statistics_math_paper:{
          type:DataTypes.BOOLEAN,
@@ -65,8 +65,16 @@ module.exports = (sequelize, DataTypes) => {
       cgpa_conversion_factor:{
           type:DataTypes.DECIMAL(3,2)
       },
-      conversion_proof_url:{
-         type:DataTypes.STRING
+      total_marks:{
+        type:DataTypes.INTEGER
+      },
+      obtained_marks:{
+        type:DataTypes.INTEGER
+      },
+      has_completed_second_year:{
+        type:DataTypes.BOOLEAN,
+        defaultValue:false,
+        allowNull:false
       },
       research_area:{
          type:DataTypes.STRING

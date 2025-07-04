@@ -13,7 +13,7 @@ exports.register=async(req,res)=>{
    const expiresAt=new Date(Date.now()+10*60*1000)
    try{
       const existing=await User.findOne({where:{email}})
-      if(existing) return res.status(400).json({message:'Email already exists'})
+      if(existing) return res.status(400).json({message:'Email already exists',status:'400'})
       await User.create({
         email,
         password_hash:hashedPassword,

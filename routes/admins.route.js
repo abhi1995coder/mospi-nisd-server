@@ -132,4 +132,6 @@ router.patch('/:id/disable', authMiddleware, roleCheck('super_admin'), adminCont
  */
 router.get('/list', authMiddleware, roleCheck('super_admin'), adminController.getAllAdmins);
 
+router.get('/list/:id',authMiddleware,roleCheck('super_admin'),adminController.getAdminById)
+
 module.exports = router;

@@ -1,131 +1,167 @@
-// controllers/offices.controller.js
-const { Office } = require('../models');
+const { Office, User } = require('../models');
 
-/**
- * POST /api/office
- * Create a new office
- */
 exports.createOffice = async (req, res) => {
-  const { office_type } = req.body;
+  const { office_type, group_b_admin_id, ...rest } = req.body;
   const role = req.user.role;
 
-  // Enforce group admins only create their own group
-  if (role === 'group_a_admin' && office_type !== 'group_a') {
-    return res.status(403).json({
-      message: 'Group A admins can only create offices of type "group_a".'
-    });
+  // Only super & Group-A Admin can create offices
+  if (!['super_admin','group_a_admin'].includes(role)) {
+    return res.status(403).json({ message: 'Not allowed to create offices', status:'403' });
   }
-  if (role === 'group_b_admin' && office_type !== 'group_b') {
-    return res.status(403).json({
-      message: 'Group B admins can only create offices of type "group_b".'
-    });
+
+  // If it's a B-office, must link a real Group-B Admin
+  let payload = { office_type, ...rest };
+  if (office_type === 'group_b') {
+    if (!group_b_admin_id) {
+      return res
+        .status(400)
+        .json({ message: 'Must specify group_b_admin_id for Group-B office', status:'400' });
+    }
+    const gb = await User.findByPk(group_b_admin_id);
+    if (!gb || gb.role !== 'group_b_admin') {
+      return res
+        .status(400)
+        .json({ message: 'Invalid Group-B Admin ID', status:'400' });
+    }
+    payload.group_b_admin_id = group_b_admin_id;
   }
 
   try {
-    const office = await Office.create({
-      ...req.body,
-      user_id: req.user.id    // track creator
-    });
-    return res.status(201).json({ message: 'Office created', office });
+    const office = await Office.create(payload);
+    return res
+      .status(201)
+      .json({ message: 'Office created', office, status:'201' });
   } catch (err) {
     console.error('createOffice error:', err);
-    return res.status(500).json({ message: 'Server error', error: err.message });
+    return res
+      .status(500)
+      .json({ message: 'Server error', error: err.message, status:'500' });
   }
 };
 
-/**
- * GET /api/office
- * List offices (scoped by creator for non-super_admin)
- */
+// controllers/offices.controller.js
 exports.getAllOffices = async (req, res) => {
   try {
+    const { office_type } = req.query;
     const where = {};
-    if (req.user.role !== 'super_admin') {
-      where.user_id = req.user.id;
+
+    // 1) filter by office_type if supplied
+    if (office_type) {
+      if (!['group_a','group_b'].includes(office_type)) {
+        return res
+          .status(400)
+          .json({ message: 'office_type must be "group_a" or "group_b"' });
+      }
+      where.office_type = office_type;
     }
-    const offices = await Office.findAll({ where });
-    return res.status(200).json({ offices });
+
+    // 2) scope to Group-B Admin’s own office if they’re the caller
+    if (req.user.role === 'group_b_admin') {
+      where.group_b_admin_id = req.user.id;
+    }
+
+    // 3) fetch, including the linked Group-B Admin record
+    const offices = await Office.findAll({
+      where,
+      include: [
+        {
+          model: User,
+          as: 'groupBAdmin',
+          attributes: ['id', 'name', 'email']
+        }
+      ]
+    });
+
+    res.status(200).json({ offices });
   } catch (err) {
-    console.error('getAllOffices error:', err);
-    return res.status(500).json({ message: 'Server error' });
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
-/**
- * GET /api/office/:id
- * Retrieve a single office by ID (with ownership check)
- */
 exports.getOfficeById = async (req, res) => {
   try {
     const office = await Office.findByPk(req.params.id);
     if (!office) {
-      return res.status(404).json({ message: 'Office not found' });
+      return res.status(404).json({ message: 'Office not found', status:'404' });
     }
-    if (req.user.role !== 'super_admin' && office.user_id !== req.user.id) {
-      return res.status(403).json({ message: 'Access forbidden' });
+
+    // Group-B Admin can only fetch their own B-office
+    if (req.user.role === 'group_b_admin' &&
+        office.group_b_admin_id !== req.user.id) {
+      return res.status(403).json({ message: 'Access forbidden', status:'403' });
     }
-    return res.status(200).json({ office });
+
+    // super_admin & group_a_admin have free access here
+    return res.status(200).json({ office, status:'200' });
   } catch (err) {
     console.error('getOfficeById error:', err);
-    return res.status(500).json({ message: 'Server error' });
+    return res
+      .status(500)
+      .json({ message: 'Server error', status:'500' });
   }
 };
 
-/**
- * PUT /api/office/:id
- * Update an office (with ownership + type guard)
- */
 exports.updateOffice = async (req, res) => {
-  const { office_type } = req.body;
-  const role = req.user.role;
-
+  const { office_type, group_b_admin_id, ...rest } = req.body;
   try {
     const office = await Office.findByPk(req.params.id);
     if (!office) {
-      return res.status(404).json({ message: 'Office not found' });
-    }
-    if (req.user.role !== 'super_admin' && office.user_id !== req.user.id) {
-      return res.status(403).json({ message: 'Access forbidden' });
+      return res.status(404).json({ message: 'Office not found', status:'404' });
     }
 
-    // Prevent group admins from changing to a different group
-    if (role === 'group_a_admin' && office_type && office_type !== 'group_a') {
-      return res.status(403).json({
-        message: 'Group A admins can only set office_type to "group_a".'
-      });
-    }
-    if (role === 'group_b_admin' && office_type && office_type !== 'group_b') {
-      return res.status(403).json({
-        message: 'Group B admins can only set office_type to "group_b".'
-      });
+    // Only super & Group-A Admin can update
+    if (!['super_admin','group_a_admin'].includes(req.user.role)) {
+      return res.status(403).json({ message: 'Access forbidden', status:'403' });
     }
 
-    await office.update(req.body);
-    return res.status(200).json({ message: 'Office updated', office });
+    // If changing type to B, must supply valid group_b_admin_id
+    if (office_type === 'group_b') {
+      if (!group_b_admin_id) {
+        return res
+          .status(400)
+          .json({ message: 'Must specify group_b_admin_id for Group-B office', status:'400' });
+      }
+      const gb = await User.findByPk(group_b_admin_id);
+      if (!gb || gb.role !== 'group_b_admin') {
+        return res
+          .status(400)
+          .json({ message: 'Invalid Group-B Admin ID', status:'400' });
+      }
+    }
+
+    await office.update({ office_type, group_b_admin_id, ...rest });
+    return res
+      .status(200)
+      .json({ message: 'Office updated', office, status:'200' });
   } catch (err) {
     console.error('updateOffice error:', err);
-    return res.status(500).json({ message: 'Server error' });
+    return res
+      .status(500)
+      .json({ message: 'Server error', status:'500' });
   }
 };
 
-/**
- * PATCH /api/office/:id
- * Disable (soft-delete) an office
- */
 exports.disableOffice = async (req, res) => {
   try {
     const office = await Office.findByPk(req.params.id);
     if (!office) {
-      return res.status(404).json({ message: 'Office not found' });
+      return res.status(404).json({ message: 'Office not found', status:'404' });
     }
-    if (req.user.role !== 'super_admin' && office.user_id !== req.user.id) {
-      return res.status(403).json({ message: 'Access forbidden' });
+
+    // Only super & Group-A Admin can disable
+    if (!['super_admin','group_a_admin'].includes(req.user.role)) {
+      return res.status(403).json({ message: 'Access forbidden', status:'403' });
     }
 
     await office.update({ is_active: false });
-    return res.status(200).json({ message: 'Office disabled' });
+    return res
+      .status(200)
+      .json({ message: 'Office disabled', status:'200' });
   } catch (err) {
     console.error('disableOffice error:', err);
-    return res.status(500).json({ message: 'Server error' });
+    return res
+      .status(500)
+      .json({ message: 'Server error', status:'500' });
   }
 };

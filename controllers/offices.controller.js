@@ -23,6 +23,10 @@ exports.createOffice = async (req, res) => {
         .status(400)
         .json({ message: 'Invalid Group-B Admin ID', status:'400' });
     }
+    const existing_gb=await Office.findOne({where:{group_b_admin_id}})
+    if(existing_gb){
+      return res.status(403).json({message:'Admin already exists for a Group B office',status:'403'})
+    }
     payload.group_b_admin_id = group_b_admin_id;
   }
 
@@ -128,6 +132,10 @@ exports.updateOffice = async (req, res) => {
           .status(400)
           .json({ message: 'Invalid Group-B Admin ID', status:'400' });
       }
+      const existing_gb=await Office.findOne({where:{group_b_admin_id}})
+       if(existing_gb){
+          return res.status(403).json({message:'Admin already exists for a Group B office',status:'403'})
+       }
     }
 
     await office.update({ office_type, group_b_admin_id, ...rest });

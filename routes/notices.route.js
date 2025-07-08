@@ -1,178 +1,47 @@
+// routes/notices.route.js
 const express = require('express');
 const router = express.Router();
-
-const {
-  createNotice,
-  getAllNotices,
-  getNoticeById,
-  updateNotice,
-  deactivateNotice
-} = require('../controllers/notices.controller');
-
+const multer = require('multer');
+const path = require('path');
 const { authMiddleware, roleCheck } = require('../middlewares/auth.middleware');
-const { validateNotice } = require('../middlewares/notices.validator');
-const { handleValidation } = require('../middlewares/validator');
+const noticeCtrl = require('../controllers/notices.controller');
 
-/**
- * @swagger
- * tags:
- *   name: Notices
- *   description: Notice board management
- */
+// Configure multer storage for PDF uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/notices');
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = `${Date.now()}-${file.originalname}`;
+    cb(null, uniqueName);
+  }
+});
 
-/**
- * @swagger
- * /notice:
- *   post:
- *     summary: Create a new notice
- *     tags: [Notices]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - title
- *               - content
- *             properties:
- *               title:
- *                 type: string
- *               content:
- *                 type: string
- *     responses:
- *       201:
- *         description: Notice created
- *       400:
- *         description: Validation error
- *       500:
- *         description: Server error
- */
+// Only accept PDF files
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === 'application/pdf') {
+    cb(null, true);
+  } else {
+    cb(new Error('Only PDF format is allowed'), false);
+  }
+};
+
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB max
+});
+
+// Admin uploads a notice
 router.post(
   '/',
   authMiddleware,
   roleCheck('super_admin', 'group_a_admin'),
-  validateNotice,
-  handleValidation,
-  createNotice
+  upload.single('file'),
+  noticeCtrl.uploadNotice
 );
 
-/**
- * @swagger
- * /notice:
- *   get:
- *     summary: Get all notices
- *     tags: [Notices]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: List of notices
- *       500:
- *         description: Server error
- */
-router.get('/', authMiddleware, getAllNotices);
-
-/**
- * @swagger
- * /notice/{id}:
- *   get:
- *     summary: Get a single notice by ID
- *     tags: [Notices]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         schema:
- *           type: string
- *         description: Notice ID
- *     responses:
- *       200:
- *         description: Notice found
- *       404:
- *         description: Notice not found
- *       500:
- *         description: Server error
- */
-router.get('/:id', authMiddleware, getNoticeById);
-
-/**
- * @swagger
- * /notice/{id}:
- *   put:
- *     summary: Update a notice
- *     tags: [Notices]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         schema:
- *           type: string
- *         description: Notice ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               title:
- *                 type: string
- *               content:
- *                 type: string
- *     responses:
- *       200:
- *         description: Notice updated
- *       400:
- *         description: Validation error
- *       404:
- *         description: Notice not found
- *       500:
- *         description: Server error
- */
-router.put(
-  '/:id',
-  authMiddleware,
-  roleCheck('super_admin', 'group_a_admin'),
-  validateNotice,
-  handleValidation,
-  updateNotice
-);
-
-/**
- * @swagger
- * /notice/{id}:
- *    patch:
- *     summary: Deactivate a notice
- *     tags: [Notices]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - name: id
- *         in: path
- *         required: true
- *         schema:
- *           type: string
- *         description: Notice ID
- *     responses:
- *       200:
- *         description: Notice deactivated
- *       404:
- *         description: Notice not found
- *       500:
- *         description: Server error
- */
-router.patch(
-  '/:id',
-  authMiddleware,
-  roleCheck('super_admin', 'group_a_admin'),
-  deactivateNotice
-);
+// Public endpoint for homepage to list notices
+router.get('/', noticeCtrl.getNotices);
 
 module.exports = router;

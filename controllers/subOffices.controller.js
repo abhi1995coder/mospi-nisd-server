@@ -45,7 +45,7 @@ exports.getAllSubOffices = async (req, res) => {
       where: { is_active: true },
       include: [{
         model: Office,
-        as: 'office',               // make sure this matches your alias in models/subOffice.js
+        as: 's_to_o',               // make sure this matches your alias in models/subOffice.js
         where: { office_type: 'group_b' }, // only group_b parent offices
         attributes: ['id','office_name','city','state','office_type']
       }]

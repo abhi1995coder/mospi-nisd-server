@@ -1,67 +1,42 @@
+// controllers/notice.controller.js
 const { Notice } = require('../models');
 
-exports.createNotice = async (req, res) => {
+// Upload a new notice (PDF)
+exports.uploadNotice = async (req, res) => {
   try {
-    const { title, content } = req.body;
-    const notice = await Notice.create({ title, content });
-    res.status(201).json({ message: 'Notice created', notice });
-  } catch (err) {
-    console.error('Error creating notice:', err);
-    res.status(500).json({ message: 'Server error' });
-  }
-};
-
-exports.getAllNotices = async (req, res) => {
-  try {
-    const notices = await Notice.findAll({where:{is_active:true}, order: [['createdAt', 'DESC']] });
-    res.status(200).json({ notices });
-  } catch (err) {
-    console.error('Error fetching notices:', err);
-    res.status(500).json({ message: 'Server error' });
-  }
-};
-
-exports.getNoticeById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const notice = await Notice.findByPk(id);
-    if (!notice) {
-      return res.status(404).json({ message: 'Notice not found' });
+    const { title } = req.body;
+    if (!req.file) {
+      return res.status(400).json({ status: 'error', message: 'PDF file is required' });
     }
-    res.status(200).json({ notice });
+
+    // req.file.path contains the file system path to the uploaded PDF
+    const notice = await Notice.create({
+      title,
+      file_path: req.file.path,
+      publish_date: new Date(),
+      is_active: true
+    });
+
+    return res.status(201).json({ status: 'success', notice });
   } catch (err) {
-    console.error('Error fetching notice:', err);
-    res.status(500).json({ message: 'Server error' });
+    console.error(err);
+    return res.status(500).json({ status: 'error', message: 'Failed to upload notice' });
   }
 };
 
-exports.updateNotice = async (req, res) => {
+// Fetch active notices for homepage
+exports.getNotices = async (req, res) => {
   try {
-    const { id } = req.params;
-    const notice = await Notice.findByPk(id);
-    if (!notice) {
-      return res.status(404).json({ message: 'Notice not found' });
-    }
-    const { title, content } = req.body;
-    await notice.update({ title, content });
-    res.status(200).json({ message: 'Notice updated', notice });
+    const notices = await Notice.findAll({
+      where: { is_active: true },
+      order: [['publish_date', 'DESC']],
+      attributes: ['id', 'title', 'file_path', 'publish_date']
+    });
+
+    return res.status(200).json({ status: 'success', notices });
   } catch (err) {
-    console.error('Error updating notice:', err);
-    res.status(500).json({ message: 'Server error' });
+    console.error(err);
+    return res.status(500).json({ status: 'error', message: 'Failed to fetch notices' });
   }
 };
 
-exports.deactivateNotice = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const notice = await Notice.findByPk(id);
-    if (!notice) {
-      return res.status(404).json({ message: 'Notice not found' });
-    }
-    await notice.update({is_active:false});
-    res.status(200).json({ message: 'Notice deactivated' });
-  } catch (err) {
-    console.error('Error deactivating notice:', err);
-    res.status(500).json({ message: 'Server error' });
-  }
-};

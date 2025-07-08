@@ -1,72 +1,63 @@
+// models/application.js
 'use strict';
-const {
-  Model,
 
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Application extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
-      Application.belongsTo(models.Intern,{
-       foreignKey:'intern_id',
-       as:'a_to_in',
-      onDelete:'CASCADE'
-      })
-      
+      // An application belongs to one user
+      Application.belongsTo(models.User, {
+        foreignKey: 'user_id',
+        as: 'user'
+      });
+      // An application belongs to one internship cycle
+      Application.belongsTo(models.InternshipCycle, {
+        foreignKey: 'cycle_id',
+        as: 'cycle'
+      });
+      // An application has many preferences
+      Application.hasMany(models.Preference, {
+        foreignKey: 'application_id',
+        as: 'preferences'
+      });
     }
   }
+
   Application.init({
-        id:{
-          type:DataTypes.UUID,
-          allowNull:false,
-          primaryKey:true,
-          defaultValue:DataTypes.UUIDV4
-         },
-         intern_id:{
-          type:DataTypes.UUID,
-          allowNull:false,
-          references:{
-            model:'interns',
-            key:'id'
-          },
-          onDelete:'CASCADE'
-         },
-         group_type:{
-            type: DataTypes.ENUM('A', 'B'),
-            allowNull:false
-         },
-         application_status:{
-           type: DataTypes.ENUM('draft', 'submitted', 'under_review', 'accepted', 'rejected','incomplete'),
-           defaultValue:'draft'
-         },
-         submission_date:{
-           type:DataTypes.DATEONLY
-         },
-         review_date:{
-           type:DataTypes.DATEONLY
-         },
-         rejection_reason:{
-             type:DataTypes.TEXT
-         },
-         createdAt:{
-            type:DataTypes.DATE,
-            defaultValue:DataTypes.NOW,
-            allowNull:false
-         },
-         updatedAt:{
-          type:DataTypes.DATE,
-          allowNull:false,
-          defaultValue:DataTypes.NOW
-         }
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+      allowNull: false
+    },
+    user_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: { model: 'users', key: 'id' },
+      onDelete: 'CASCADE'
+    },
+    cycle_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: { model: 'internship_cycles', key: 'id' },
+      onDelete: 'RESTRICT'
+    },
+    group_type: {
+      type: DataTypes.ENUM('group_a', 'group_b'),
+      allowNull: false
+    },
+    status: {
+      type: DataTypes.ENUM('draft', 'submitted', 'screening', 'selected', 'rejected'),
+      defaultValue: 'draft',
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Application',
-    tableName:'applications'
+    tableName: 'applications',
+    underscored: true,
+    timestamps: true
   });
 
   return Application;
